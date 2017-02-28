@@ -112,6 +112,5 @@ void ATim::Jump()
 
 void ATim::Shoot()
 {
-	GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f,
-		GetActorRotation());
+	GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
 }
