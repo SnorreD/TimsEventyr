@@ -28,7 +28,10 @@ public:
 	void MoveX(float AxisValue);
 	void MoveY(float AxisValue);
 	void Jump();
-	void Shoot();
+	void AttackUp();
+	void AttackDown();
+	void AttackLeft();
+	void AttackRight();
 
 	FVector CurrentVelocity;
 

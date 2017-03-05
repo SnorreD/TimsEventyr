@@ -26,15 +26,16 @@ ATim::ATim()
 
 	OurVisibleComponent->SetupAttachment(RootComponent);
 
-	CursorToWorld = CreateDefaultSubobject<UDecalComponent>("CursorToWorld");
-	CursorToWorld->SetupAttachment(RootComponent);
-	static ConstructorHelpers::FObjectFinder<UMaterial> DecalMaterialAsset(TEXT("Assets'/Game/Assets/M_Cursor_Decal.M_Cursor_Decal'"));
-	if (DecalMaterialAsset.Succeeded())
-	{
-		CursorToWorld->SetDecalMaterial(DecalMaterialAsset.Object);
-	}
-	CursorToWorld->DecalSize = FVector(16.0f, 32.0f, 32.0f);
-	CursorToWorld->SetRelativeRotation(FRotator(90.0f, 0.0f, 0.0f).Quaternion());
+	// Don't rotate character to camera direction
+	//bUseControllerRotationPitch = false;
+	bUseControllerRotationYaw = false;
+	//bUseControllerRotationRoll = false;
+
+	// Configure character movement
+	GetCharacterMovement()->bOrientRotationToMovement = true; // Rotate character to moving direction
+	GetCharacterMovement()->RotationRate = FRotator(0.f, 90.f, 0.f);
+	//GetCharacterMovement()->bConstrainToPlane = true;
+	//GetCharacterMovement()->bSnapToPlaneAtStart = true;
 }
 
 // Called when the game starts or when spawned
@@ -48,34 +49,6 @@ void ATim::BeginPlay()
 void ATim::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	bool HitResult = false;
-
-	FHitResult Hit;
-	HitResult = GetWorld()->GetFirstPlayerController()->GetHitResultUnderCursorByChannel(UEngineTypes::ConvertToTraceType(ECC_WorldStatic), true, Hit);
-
-	if (HitResult)
-	{
-		FVector CursorFV = Hit.ImpactNormal;
-		FRotator CursorR = CursorFV.Rotation();
-		CursorToWorld->SetWorldLocation(Hit.Location);
-		CursorToWorld->SetWorldRotation(CursorR);
-
-
-		FVector CursorLocation = Hit.Location;
-		UE_LOG(LogTemp, Warning, TEXT("Cursor location %s!"), *CursorLocation.ToString());
-		FVector TempLocation = FVector(CursorLocation.X, CursorLocation.Y, 30.f);
-		//        if (CursorMesh)
-		//            CursorMesh->SetWorldLocation(TempLocation);
-		//        else
-		//            UE_LOG(LogTemp, Warning, TEXT("Cursor Mesh not found"));
-
-		FVector NewDirection = TempLocation - GetActorLocation();
-		NewDirection.Z = 0.f;
-		NewDirection.Normalize();
-		SetActorRotation(NewDirection.Rotation());
-	}
-
 }
 
 // Called to bind functionality to input
@@ -86,7 +59,10 @@ void ATim::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	InputComponent->BindAxis("MoveX", this, &ATim::MoveX);
 	InputComponent->BindAxis("MoveY", this, &ATim::MoveY);
 	InputComponent->BindAction("Jump", IE_Pressed, this, &ATim::Jump);
-	InputComponent->BindAction("Shoot", IE_Pressed, this, &ATim::Shoot);
+	InputComponent->BindAction("AttackUp", IE_Pressed, this, &ATim::AttackUp);
+	InputComponent->BindAction("AttackDown", IE_Pressed, this, &ATim::AttackDown);
+	InputComponent->BindAction("AttackLeft", IE_Pressed, this, &ATim::AttackLeft);
+	InputComponent->BindAction("AttackRight", IE_Pressed, this, &ATim::AttackRight);
 
 }
 
@@ -110,7 +86,22 @@ void ATim::Jump()
 	ACharacter::Jump();
 }
 
-void ATim::Shoot()
+void ATim::AttackUp()
 {
-	GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
+	GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, FRotator( 0.f, 0.f, 0.f));
+}
+
+void ATim::AttackDown()
+{
+	GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + GetActorForwardVector() * -100.f, FRotator(0.f, 180.f, 0.f));
+}
+
+void ATim::AttackLeft()
+{
+	GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + GetActorRightVector() * -100.f, FRotator(0.f, -90.f, 0.f));
+}
+
+void ATim::AttackRight()
+{
+	GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + GetActorRightVector() * 100.f, FRotator(0.f, 90.f, 0.f));
 }
