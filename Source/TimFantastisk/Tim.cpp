@@ -33,7 +33,7 @@ ATim::ATim()
 
 	// Configure character movement
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Rotate character to moving direction
-	GetCharacterMovement()->RotationRate = FRotator(0.f, 90.f, 0.f);
+	GetCharacterMovement()->RotationRate = FRotator(0.f, 690.f, 0.f);
 	//GetCharacterMovement()->bConstrainToPlane = true;
 	//GetCharacterMovement()->bSnapToPlaneAtStart = true;
 }
@@ -70,14 +70,14 @@ void ATim::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void ATim::MoveX(float AxisValue)
 {
 
-	AddMovementInput(GetActorForwardVector(), AxisValue);
+	AddMovementInput(FVector(1.f, 0.f, 0.f), AxisValue);
 
 }
 
 void ATim::MoveY(float AxisValue)
 {
 
-	AddMovementInput(GetActorRightVector(), AxisValue);
+	AddMovementInput(FVector(0.f, 1.f, 0.f), AxisValue);
 
 }
 
@@ -88,20 +88,20 @@ void ATim::Jump()
 
 void ATim::AttackUp()
 {
-	GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, FRotator( 0.f, 0.f, 0.f));
+	GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + FVector(1.f, 0.f, 0.f) * 100.f, FRotator( 0.f, 0.f, 0.f));
 }
 
 void ATim::AttackDown()
 {
-	GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + GetActorForwardVector() * -100.f, FRotator(0.f, 180.f, 0.f));
+	GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + FVector(1.f, 0.f, 0.f) * -100.f, FRotator(0.f, 180.f, 0.f));
 }
 
 void ATim::AttackLeft()
 {
-	GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + GetActorRightVector() * -100.f, FRotator(0.f, -90.f, 0.f));
+	GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + FVector(0.f, 1.f, 0.f) * -100.f, FRotator(0.f, -90.f, 0.f));
 }
 
 void ATim::AttackRight()
 {
-	GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + GetActorRightVector() * 100.f, FRotator(0.f, 90.f, 0.f));
+	GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + FVector(0.f, 1.f, 0.f) * 100.f, FRotator(0.f, 90.f, 0.f));
 }
