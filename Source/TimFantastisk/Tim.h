@@ -32,8 +32,12 @@ public:
 	void AttackDown();
 	void AttackLeft();
 	void AttackRight();
+	void Modus1();
+	void Modus2();
+	void Modus3();
 
 	FVector CurrentVelocity;
+	int Mode;
 
 	UPROPERTY(EditAnywhere)
 		int Speed = 400;
@@ -54,4 +58,6 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Spawning")
 		TSubclassOf<class ABullet> BulletBlueprint;
+	UPROPERTY(EditAnywhere, Category = "Spawning")
+		TSubclassOf<class AMelee> MeleeBlueprint;
 };

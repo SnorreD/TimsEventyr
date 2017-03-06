@@ -3,6 +3,7 @@
 #include "TimFantastisk.h"
 #include "Tim.h"
 #include "Bullet.h"
+#include "Melee.h"
 
 
 // Sets default values
@@ -58,11 +59,19 @@ void ATim::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 	InputComponent->BindAxis("MoveX", this, &ATim::MoveX);
 	InputComponent->BindAxis("MoveY", this, &ATim::MoveY);
+
 	InputComponent->BindAction("Jump", IE_Pressed, this, &ATim::Jump);
+
 	InputComponent->BindAction("AttackUp", IE_Pressed, this, &ATim::AttackUp);
 	InputComponent->BindAction("AttackDown", IE_Pressed, this, &ATim::AttackDown);
 	InputComponent->BindAction("AttackLeft", IE_Pressed, this, &ATim::AttackLeft);
 	InputComponent->BindAction("AttackRight", IE_Pressed, this, &ATim::AttackRight);
+
+	InputComponent->BindAction("Mode1", IE_Pressed, this, &ATim::Modus1);
+	InputComponent->BindAction("Mode2", IE_Pressed, this, &ATim::Modus2);
+	InputComponent->BindAction("Mode3", IE_Pressed, this, &ATim::Modus3);
+
+
 
 }
 
@@ -88,20 +97,47 @@ void ATim::Jump()
 
 void ATim::AttackUp()
 {
-	GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + FVector(1.f, 0.f, 0.f) * 100.f, FRotator( 0.f, 0.f, 0.f));
+	if (Mode == 1)
+		GetWorld()->SpawnActor<AMelee>(MeleeBlueprint, GetActorLocation() + FVector(1.f, 0.f, 0.f) * 100.f, FRotator(90.f, 0.f, 0.f));
+	if (Mode == 2)
+		GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + FVector(1.f, 0.f, 0.f) * 100.f, FRotator(0.f, 0.f, 0.f));
 }
 
 void ATim::AttackDown()
 {
-	GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + FVector(1.f, 0.f, 0.f) * -100.f, FRotator(0.f, 180.f, 0.f));
+	if (Mode == 1)
+		GetWorld()->SpawnActor<AMelee>(MeleeBlueprint, GetActorLocation() + FVector(1.f, 0.f, 0.f) * -100.f, FRotator(90.f, 180.f, 0.f));
+	if (Mode == 2)
+		GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + FVector(1.f, 0.f, 0.f) * -100.f, FRotator(0.f, 180.f, 0.f));
 }
 
 void ATim::AttackLeft()
 {
-	GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + FVector(0.f, 1.f, 0.f) * -100.f, FRotator(0.f, -90.f, 0.f));
+	if (Mode == 1)
+		GetWorld()->SpawnActor<AMelee>(MeleeBlueprint, GetActorLocation() + FVector(0.f, 1.f, 0.f) * -100.f, FRotator(90.f, -90.f, 0.f));
+	if (Mode == 2)
+		GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + FVector(0.f, 1.f, 0.f) * -100.f, FRotator(0.f, -90.f, 0.f));
 }
 
 void ATim::AttackRight()
 {
-	GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + FVector(0.f, 1.f, 0.f) * 100.f, FRotator(0.f, 90.f, 0.f));
+	if (Mode == 1)
+		GetWorld()->SpawnActor<AMelee>(MeleeBlueprint, GetActorLocation() + FVector(0.f, 1.f, 0.f) * 100.f, FRotator(90.f, 90.f, 0.f));
+	if (Mode == 2)
+		GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + FVector(0.f, 1.f, 0.f) * 100.f, FRotator(0.f, 90.f, 0.f));
+}
+
+void ATim::Modus1()
+{
+	Mode = 1;
+}
+
+void ATim::Modus2()
+{
+	Mode = 2;
+}
+
+void ATim::Modus3()
+{
+	Mode = 3;
 }

@@ -11,9 +11,13 @@ AFiende::AFiende()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	RootCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("MyEnemy"));
+	RootComponent = RootCapsule;
+	RootCapsule->SetSimulatePhysics(true);
+
 	CurrentVelocity.X = 300.0f;
 	CurrentVelocity.Y = 300.0f;
-	CurrentVelocity.Z = 300.0f;
+	//CurrentVelocity.Z = 300.0f;
 
 }
 
@@ -45,6 +49,7 @@ void AFiende::Tick(float DeltaTime)
 	FVector EnemyLocation = GetActorLocation();
 	FVector PlayerLocation = myCharacter->GetActorLocation();
 	NewDirection = PlayerLocation - EnemyLocation;
+	NewDirection.Z = 0.f;
 	SetActorRotation(NewDirection.Rotation());
 
 

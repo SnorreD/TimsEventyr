@@ -3,31 +3,38 @@
 #pragma once
 
 #include "GameFramework/Actor.h"
-#include "Fiende.generated.h"
+#include "Melee.generated.h"
 
 UCLASS()
-class TIMFANTASTISK_API AFiende : public AActor
+class TIMFANTASTISK_API AMelee : public AActor
 {
 	GENERATED_BODY()
-
-public:
+	
+public:	
 	// Sets default values for this actor's properties
-	AFiende();
+	AMelee();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:
+public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	FVector CurrentVelocity;
-	FVector NewDirection;
+	UPROPERTY(EditAnywhere)
+		float TimeBeforeDestroy = 0.25f;
 
-	void ImHit();
+	float TimeLived{ 0 };
 
 	UPROPERTY(EditAnywhere)
 		UShapeComponent* RootCapsule = nullptr;
 
+	UFUNCTION()
+		void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor,
+			UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex,
+			bool bFromSweep, const FHitResult &SweepResult);
+
+	
+	
 };
