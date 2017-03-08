@@ -3,6 +3,7 @@
 #include "TimFantastisk.h"
 #include "Bullet.h"
 #include "Fiende.h"
+#include "Tim.h"
 
 
 // Sets default values
@@ -50,7 +51,7 @@ void ABullet::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherA
 	//UE_LOG(LogTemp, Warning, TEXT("Bullet Overlap %s"), *OtherActor->GetName())
 	if (OtherActor->IsA(AFiende::StaticClass()))
 	{
-		Cast<AFiende>(OtherActor)->ImHit(0.5f); //Alternativt bare OtherActor->Destroy();
+		Cast<AFiende>(OtherActor)->ImHit(Damage); //Alternativt bare OtherActor->Destroy();
 										   //PartikkelFX:
 										   //UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplotionFX, GetTransform(), true);
 
@@ -59,6 +60,12 @@ void ABullet::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherA
 										   //UGameplayStatics::PlaySoundAtLocation(GetWorld(), ExplotionSound, GetActorLocation());
 
 										   //Destroy Bullet:
+		Destroy();
+	}
+
+	else if (OtherActor->IsA(ATim::StaticClass()))
+	{
+		Cast<ATim>(OtherActor)->ImHit(); //Alternativt bare OtherActor->Destroy();
 		Destroy();
 	}
 }

@@ -3,6 +3,7 @@
 #include "TimFantastisk.h"
 #include "Fiende.h"
 #include "Tim.h"
+#include "Bullet.h"
 
 
 // Sets default values

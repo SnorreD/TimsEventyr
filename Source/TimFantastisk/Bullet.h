@@ -28,6 +28,9 @@ public:
 	UPROPERTY(EditAnywhere)
 		float TimeBeforeDestroy = 5.f;
 
+	UPROPERTY(EditAnywhere)
+		float Damage = 0.5f;
+
 	float TimeLived{ 0 };
 
 	UPROPERTY(EditAnywhere)
