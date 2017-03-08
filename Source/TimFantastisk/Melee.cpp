@@ -4,6 +4,7 @@
 #include "Melee.h"
 #include "Fiende.h"
 #include "AvstandFiende.h"
+#include "Bullet.h"
 
 
 // Sets default values
@@ -61,6 +62,13 @@ void AMelee::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherAc
 	if (OtherActor->IsA(AAvstandFiende::StaticClass()))
 	{
 		Cast<AAvstandFiende>(OtherActor)->ImHit(Damage); //Alternativt bare OtherActor->Destroy();
+
+		Destroy();
+	}
+
+	if (OtherActor->IsA(ABullet::StaticClass()))
+	{
+		Cast<ABullet>(OtherActor)->Destroy();
 
 		Destroy();
 	}
