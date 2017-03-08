@@ -23,7 +23,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(EditAnywhere)
-		float Speed = 400.f;
+		float Speed = 700.f;
 
 	UPROPERTY(EditAnywhere)
 		float TimeBeforeDestroy = 5.f;

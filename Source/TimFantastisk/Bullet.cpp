@@ -4,6 +4,7 @@
 #include "Bullet.h"
 #include "Fiende.h"
 #include "Tim.h"
+#include "AvstandFiende.h"
 
 
 // Sets default values
@@ -66,6 +67,12 @@ void ABullet::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherA
 	else if (OtherActor->IsA(ATim::StaticClass()))
 	{
 		Cast<ATim>(OtherActor)->ImHit(); //Alternativt bare OtherActor->Destroy();
+		Destroy();
+	}
+
+	else if (OtherActor->IsA(AAvstandFiende::StaticClass()))
+	{
+		Cast<AAvstandFiende>(OtherActor)->ImHit(Damage); //Alternativt bare OtherActor->Destroy();
 		Destroy();
 	}
 }

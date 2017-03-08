@@ -10,6 +10,10 @@ AAvstandFiende::AAvstandFiende()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	RootCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("MyEnemy"));
+	RootComponent = RootCapsule;
+	RootCapsule->SetSimulatePhysics(true);
+	RootCapsule->SetSimulatePhysics(true);
 
 	CurrentVelocity.X = 300.0f;
 	CurrentVelocity.Y = 300.0f;
@@ -35,7 +39,7 @@ void AAvstandFiende::Tick(float DeltaTime)
 			LastShot += DeltaTime;
 			if (LastShot > TimeBetweenShots)
 			{
-				GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
+				GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + GetActorForwardVector() * 180.f, GetActorRotation());
 				LastShot = 0.f;
 			}	
 		}
@@ -56,5 +60,18 @@ void AAvstandFiende::Tick(float DeltaTime)
 	NewDirection.Z = 0.f;
 	SetActorRotation(NewDirection.Rotation());
 
+}
+
+void AAvstandFiende::ImHit(float Damage)
+{
+	Health = Health - Damage;
+
+	if (Health <= 0.f)
+	{
+		this->Destroy();
+	}
+
+	Damage = 0;
+	//Faen = true;
 }
 

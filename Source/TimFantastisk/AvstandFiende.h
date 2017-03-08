@@ -28,7 +28,13 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Spawning")
 		TSubclassOf<class ABullet> BulletBlueprint;
 
+	UPROPERTY(EditAnywhere)
+		UShapeComponent* RootCapsule = nullptr;
+
 	float LastShot{ 0.f };
 	float TimeBetweenShots{ 0.8f };
+
+	float Health{ 1.f };
 	
+	void ImHit(float Damage);
 };

@@ -3,6 +3,7 @@
 #include "TimFantastisk.h"
 #include "Melee.h"
 #include "Fiende.h"
+#include "AvstandFiende.h"
 
 
 // Sets default values
@@ -46,7 +47,7 @@ void AMelee::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherAc
 	//UE_LOG(LogTemp, Warning, TEXT("Bullet Overlap %s"), *OtherActor->GetName())
 	if (OtherActor->IsA(AFiende::StaticClass()))
 	{
-		Cast<AFiende>(OtherActor)->ImHit(1.f); //Alternativt bare OtherActor->Destroy();
+		Cast<AFiende>(OtherActor)->ImHit(Damage); //Alternativt bare OtherActor->Destroy();
 											//PartikkelFX:
 											//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplotionFX, GetTransform(), true);
 
@@ -55,6 +56,12 @@ void AMelee::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherAc
 											//UGameplayStatics::PlaySoundAtLocation(GetWorld(), ExplotionSound, GetActorLocation());
 
 											//Destroy Bullet:
+		Destroy();
+	}
+	if (OtherActor->IsA(AAvstandFiende::StaticClass()))
+	{
+		Cast<AAvstandFiende>(OtherActor)->ImHit(Damage); //Alternativt bare OtherActor->Destroy();
+
 		Destroy();
 	}
 }
