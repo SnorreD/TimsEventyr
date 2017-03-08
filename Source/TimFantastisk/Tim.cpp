@@ -50,6 +50,22 @@ void ATim::BeginPlay()
 void ATim::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (Skytesperre == true)
+	{
+		TidSidenAngrep += DeltaTime;
+		if (TidSidenAngrep > AngrepMellomrom)
+		{
+			Skytesperre = false;
+			TidSidenAngrep = 0.f;
+		}
+	}
+
+	FVector TimHvorErDu = GetActorLocation();
+	if (TimHvorErDu.Z < -900.f)
+	{
+		UGameplayStatics::OpenLevel(GetWorld(), "Prototype_Map");
+	}
 }
 
 // Called to bind functionality to input
@@ -97,34 +113,58 @@ void ATim::Jump()
 
 void ATim::AttackUp()
 {
-	if (Mode == 1)
-		GetWorld()->SpawnActor<AMelee>(MeleeBlueprint, GetActorLocation() + FVector(1.f, 0.f, 0.f) * 100.f, FRotator(90.f, 0.f, 0.f));
-	if (Mode == 2)
-		GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + FVector(1.f, 0.f, 0.f) * 100.f, FRotator(0.f, 0.f, 0.f));
+	
+	if (Skytesperre != true)
+	{
+		if (Mode == 1)
+			GetWorld()->SpawnActor<AMelee>(MeleeBlueprint, GetActorLocation() + FVector(1.f, 0.f, 0.f) * 100.f, FRotator(90.f, 0.f, 0.f));
+		if (Mode == 2)
+			GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + FVector(1.f, 0.f, 0.f) * 100.f, FRotator(0.f, 0.f, 0.f));
+
+		Skytesperre = true;
+	}
 }
 
 void ATim::AttackDown()
 {
-	if (Mode == 1)
-		GetWorld()->SpawnActor<AMelee>(MeleeBlueprint, GetActorLocation() + FVector(1.f, 0.f, 0.f) * -100.f, FRotator(90.f, 180.f, 0.f));
-	if (Mode == 2)
-		GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + FVector(1.f, 0.f, 0.f) * -100.f, FRotator(0.f, 180.f, 0.f));
+	
+	if (Skytesperre != true)
+	{
+		if (Mode == 1)
+			GetWorld()->SpawnActor<AMelee>(MeleeBlueprint, GetActorLocation() + FVector(1.f, 0.f, 0.f) * -100.f, FRotator(90.f, 180.f, 0.f));
+		if (Mode == 2)
+			GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + FVector(1.f, 0.f, 0.f) * -100.f, FRotator(0.f, 180.f, 0.f));
+
+		Skytesperre = true;
+	}
 }
 
 void ATim::AttackLeft()
 {
-	if (Mode == 1)
-		GetWorld()->SpawnActor<AMelee>(MeleeBlueprint, GetActorLocation() + FVector(0.f, 1.f, 0.f) * -100.f, FRotator(90.f, -90.f, 0.f));
-	if (Mode == 2)
-		GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + FVector(0.f, 1.f, 0.f) * -100.f, FRotator(0.f, -90.f, 0.f));
+	
+	if (Skytesperre != true)
+	{
+		if (Mode == 1)
+			GetWorld()->SpawnActor<AMelee>(MeleeBlueprint, GetActorLocation() + FVector(0.f, 1.f, 0.f) * -100.f, FRotator(90.f, -90.f, 0.f));
+		if (Mode == 2)
+			GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + FVector(0.f, 1.f, 0.f) * -100.f, FRotator(0.f, -90.f, 0.f));
+
+		Skytesperre = true;
+	}
 }
 
 void ATim::AttackRight()
 {
-	if (Mode == 1)
-		GetWorld()->SpawnActor<AMelee>(MeleeBlueprint, GetActorLocation() + FVector(0.f, 1.f, 0.f) * 100.f, FRotator(90.f, 90.f, 0.f));
-	if (Mode == 2)
-		GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + FVector(0.f, 1.f, 0.f) * 100.f, FRotator(0.f, 90.f, 0.f));
+	
+	if (Skytesperre != true)
+	{
+		if (Mode == 1)
+			GetWorld()->SpawnActor<AMelee>(MeleeBlueprint, GetActorLocation() + FVector(0.f, 1.f, 0.f) * 100.f, FRotator(90.f, 90.f, 0.f));
+		if (Mode == 2)
+			GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + FVector(0.f, 1.f, 0.f) * 100.f, FRotator(0.f, 90.f, 0.f));
+
+		Skytesperre = true;
+	}
 }
 
 void ATim::Modus1()
@@ -140,4 +180,9 @@ void ATim::Modus2()
 void ATim::Modus3()
 {
 	Mode = 3;
+}
+
+void ATim::ImHit()
+{
+	UGameplayStatics::OpenLevel(GetWorld(), "Prototype_Map");
 }

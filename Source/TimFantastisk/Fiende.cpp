@@ -14,6 +14,8 @@ AFiende::AFiende()
 	RootCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("MyEnemy"));
 	RootComponent = RootCapsule;
 	RootCapsule->SetSimulatePhysics(true);
+	RootCapsule->bGenerateOverlapEvents = true;
+	RootCapsule->OnComponentBeginOverlap.AddDynamic(this, &AFiende::OnOverlap);
 
 	CurrentVelocity.X = 300.0f;
 	CurrentVelocity.Y = 300.0f;
@@ -38,7 +40,7 @@ void AFiende::Tick(float DeltaTime)
 		for (float TimeHit = 0.f; TimeHit < HitBackTime; ++TimeHit)
 		{
 			FVector LocationWhenHit = GetActorLocation();
-			LocationWhenHit.Z = LocationWhenHit.Z + 100.f;
+			LocationWhenHit.Z = LocationWhenHit.Z + 20.f;
 			SetActorLocation(LocationWhenHit);
 		};
 		Faen = false;
@@ -69,7 +71,7 @@ void AFiende::ImHit(float Damage)
 {
 	Health = Health - Damage;
 
-	if (Health == 0.f)
+	if (Health <= 0.f)
 	{
 		this->Destroy();
 	}
@@ -78,3 +80,19 @@ void AFiende::ImHit(float Damage)
 	Faen = true;
 }
 
+void AFiende::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor,
+	UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex,
+	bool bFromSweep, const FHitResult &SweepResult)
+{
+	//UE_LOG(LogTemp, Warning, TEXT("Bullet Overlap %s"), *OtherActor->GetName())
+	if (OtherActor->IsA(ATim::StaticClass()))
+	{
+		Cast<ATim>(OtherActor)->ImHit(); //Alternativt bare OtherActor->Destroy();
+												//PartikkelFX:
+												//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplotionFX, GetTransform(), true);
+
+												//SoundFX
+												//UGameplayStatics::PlaySound2D(GetWorld(), ExplotionSound, 1.f, 1.f, 0.f);
+												//UGameplayStatics::PlaySoundAtLocation(GetWorld(), ExplotionSound, GetActorLocation());
+	}
+}

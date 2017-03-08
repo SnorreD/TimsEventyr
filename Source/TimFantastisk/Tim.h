@@ -35,6 +35,7 @@ public:
 	void Modus1();
 	void Modus2();
 	void Modus3();
+	void ImHit();
 
 	FVector CurrentVelocity;
 	int Mode;
@@ -60,4 +61,11 @@ public:
 		TSubclassOf<class ABullet> BulletBlueprint;
 	UPROPERTY(EditAnywhere, Category = "Spawning")
 		TSubclassOf<class AMelee> MeleeBlueprint;
+
+	bool Skytesperre{ false };
+
+	UPROPERTY(EditAnywhere)
+		float AngrepMellomrom = 0.5f;
+
+	float TidSidenAngrep;
 };
