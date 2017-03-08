@@ -25,9 +25,15 @@ public:
 	FVector CurrentVelocity;
 	FVector NewDirection;
 
-	void ImHit();
+	void ImHit(float Damage);
 
 	UPROPERTY(EditAnywhere)
 		UShapeComponent* RootCapsule = nullptr;
+
+	float Health{ 2.f };
+	bool Faen{ false };
+
+	float HitBackTime{ 0.8f };
+
 
 };

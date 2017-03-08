@@ -50,7 +50,7 @@ void ABullet::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherA
 	//UE_LOG(LogTemp, Warning, TEXT("Bullet Overlap %s"), *OtherActor->GetName())
 	if (OtherActor->IsA(AFiende::StaticClass()))
 	{
-		Cast<AFiende>(OtherActor)->ImHit(); //Alternativt bare OtherActor->Destroy();
+		Cast<AFiende>(OtherActor)->ImHit(0.5f); //Alternativt bare OtherActor->Destroy();
 										   //PartikkelFX:
 										   //UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplotionFX, GetTransform(), true);
 

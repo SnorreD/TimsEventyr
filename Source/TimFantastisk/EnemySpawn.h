@@ -23,7 +23,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(EditAnywhere)
-		float TimeBetweenSpawned = 2.f;
+		float TimeBetweenSpawned = 0.5f;
 
 	UPROPERTY(EditAnywhere)
 		int NumberOfEnemies = 10;

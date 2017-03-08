@@ -13,7 +13,7 @@ AMelee::AMelee()
 
 	RootCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("MySword"));
 	RootComponent = RootCapsule;
-	//RootCapsule->SetRelativeScale3D(FVector(1.5f, 1.5f, 1.5f));
+	RootCapsule->SetRelativeScale3D(FVector(1.5f, 1.5f, 1.5f));
 	RootCapsule->bGenerateOverlapEvents = true;
 	RootCapsule->OnComponentBeginOverlap.AddDynamic(this, &AMelee::OnOverlap);
 
@@ -46,7 +46,7 @@ void AMelee::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherAc
 	//UE_LOG(LogTemp, Warning, TEXT("Bullet Overlap %s"), *OtherActor->GetName())
 	if (OtherActor->IsA(AFiende::StaticClass()))
 	{
-		Cast<AFiende>(OtherActor)->ImHit(); //Alternativt bare OtherActor->Destroy();
+		Cast<AFiende>(OtherActor)->ImHit(1.f); //Alternativt bare OtherActor->Destroy();
 											//PartikkelFX:
 											//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplotionFX, GetTransform(), true);
 

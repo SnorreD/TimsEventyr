@@ -33,6 +33,16 @@ void AFiende::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (Faen == true)
+	{
+		for (float TimeHit = 0.f; TimeHit < HitBackTime; ++TimeHit)
+		{
+			FVector LocationWhenHit = GetActorLocation();
+			LocationWhenHit.Z = LocationWhenHit.Z + 100.f;
+			SetActorLocation(LocationWhenHit);
+		};
+		Faen = false;
+	}
 
 	if (!CurrentVelocity.IsZero())
 	{
@@ -55,8 +65,16 @@ void AFiende::Tick(float DeltaTime)
 
 }
 
-void AFiende::ImHit()
+void AFiende::ImHit(float Damage)
 {
-	Destroy();
+	Health = Health - Damage;
+
+	if (Health == 0.f)
+	{
+		this->Destroy();
+	}
+
+	Damage = 0;
+	Faen = true;
 }
 
