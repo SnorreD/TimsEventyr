@@ -34,22 +34,21 @@ void AAvstandFiende::Tick(float DeltaTime)
 
 	if (!CurrentVelocity.IsZero())
 	{
-		if ((NewDirection.X < 400.0f && NewDirection.X > -400.0f) && (NewDirection.Y < 400.0f && NewDirection.Y > -400.0f))
+		if ((NewDirection.X < ShootDistance && NewDirection.X > (ShootDistance * -1)) && (NewDirection.Y < ShootDistance && NewDirection.Y > (ShootDistance * -1)))
 		{
 			LastShot += DeltaTime;
 			if (LastShot > TimeBetweenShots)
 			{
-				GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + GetActorForwardVector() * 180.f, GetActorRotation());
+				GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + GetActorForwardVector() * 155.f, GetActorRotation());
 				LastShot = 0.f;
-			}	
+			}
 		}
+	}
 
-		else if ((NewDirection.X < 800.0f && NewDirection.X > -800.0f) && (NewDirection.Y < 800.0f && NewDirection.Y > -800.0f))
-		{
-			FVector NewLocation = GetActorLocation() + GetActorForwardVector()*(CurrentVelocity * DeltaTime);
-			SetActorLocation(NewLocation);
-		}
-
+	else if ((NewDirection.X < MoveDistance && NewDirection.X > (MoveDistance * -1)) && (NewDirection.Y < MoveDistance && NewDirection.Y > (MoveDistance * -1)))
+	{
+		FVector NewLocation = GetActorLocation() + GetActorForwardVector()*(CurrentVelocity * DeltaTime);
+		SetActorLocation(NewLocation);
 	}
 
 	ACharacter* myCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);

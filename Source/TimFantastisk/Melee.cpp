@@ -57,20 +57,20 @@ void AMelee::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherAc
 											//UGameplayStatics::PlaySoundAtLocation(GetWorld(), ExplotionSound, GetActorLocation());
 
 											//Destroy Bullet:
-		Destroy();
+		//Destroy();
 	}
 	if (OtherActor->IsA(AAvstandFiende::StaticClass()))
 	{
 		Cast<AAvstandFiende>(OtherActor)->ImHit(Damage); //Alternativt bare OtherActor->Destroy();
 
-		Destroy();
+		//Destroy();
 	}
 
 	if (OtherActor->IsA(ABullet::StaticClass()))
 	{
 		Cast<ABullet>(OtherActor)->Destroy();
 
-		Destroy();
+		//Destroy();
 	}
 }
 

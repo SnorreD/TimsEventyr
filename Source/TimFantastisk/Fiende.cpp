@@ -70,13 +70,16 @@ void AFiende::Tick(float DeltaTime)
 
 void AFiende::ImHit(float Damage)
 {
-	Health = Health - Damage;
-
-	if (Health <= 0.f)
+	if (Faen == false)
 	{
-		this->Destroy();
-	}
+		Health = Health - Damage;
 
+		if (Health <= 0.f)
+		{
+			this->Destroy();
+		}
+	}
+	
 	Damage = 0;
 	Faen = true;
 }

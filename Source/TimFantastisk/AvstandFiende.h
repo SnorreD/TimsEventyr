@@ -31,6 +31,12 @@ public:
 	UPROPERTY(EditAnywhere)
 		UShapeComponent* RootCapsule = nullptr;
 
+	UPROPERTY(EditAnywhere, Category = "Movement")
+		float ShootDistance = 600.f;
+
+	UPROPERTY(EditAnywhere, Category = "Movement")
+		float MoveDistance = 800.f;
+
 	float LastShot{ 0.f };
 	float TimeBetweenShots{ 0.8f };
 
