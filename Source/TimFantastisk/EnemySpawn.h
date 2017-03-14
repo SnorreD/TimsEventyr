@@ -35,7 +35,13 @@ public:
 	FVector PlayerDistance;
 
 	UPROPERTY(EditAnywhere, Category = "Spawning")
+		bool CloseRangeEnemy = true; //Sann for nærkamp fiende og falsk for avstand fiende.
+
+	UPROPERTY(EditAnywhere, Category = "Spawning")
 		TSubclassOf<class AFiende> FiendeBlueprint;
+
+	UPROPERTY(EditAnywhere, Category = "Spawning")
+		TSubclassOf<class AAvstandFiende> AvstandFiendeBlueprint;
 
 	UPROPERTY(EditAnywhere)
 		UShapeComponent* RootSphere = nullptr;

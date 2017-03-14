@@ -3,6 +3,7 @@
 #include "TimFantastisk.h"
 #include "EnemySpawn.h"
 #include "Fiende.h"
+#include "AvstandFiende.h"
 #include "Tim.h"
 
 
@@ -44,9 +45,19 @@ void AEnemySpawn::Tick(float DeltaTime)
 		LastSpawn += DeltaTime;
 		if (LastSpawn > TimeBetweenSpawned)
 		{
-			GetWorld()->SpawnActor<AFiende>(FiendeBlueprint, GetActorLocation() + FVector(1.f, 0.f, 0.f) * 100.f, FRotator(90.f, 0.f, 0.f));
-			LastSpawn = 0.f;
-			++AmountSpawned;
+			if (CloseRangeEnemy == true)
+			{
+				GetWorld()->SpawnActor<AFiende>(FiendeBlueprint, GetActorLocation() + FVector(1.f, 0.f, 0.f) * 100.f, FRotator(90.f, 0.f, 0.f));
+				LastSpawn = 0.f;
+				++AmountSpawned;
+			}
+			else
+			{
+				GetWorld()->SpawnActor<AAvstandFiende>(AvstandFiendeBlueprint, GetActorLocation() + FVector(1.f, 0.f, 0.f) * 100.f, FRotator(90.f, 0.f, 0.f));
+				LastSpawn = 0.f;
+				++AmountSpawned;
+			}
+			
 		}
 	}
 	
