@@ -39,7 +39,7 @@ void AAvstandFiende::Tick(float DeltaTime)
 			LastShot += DeltaTime;
 			if (LastShot > TimeBetweenShots)
 			{
-				GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + GetActorForwardVector() * 155.f, GetActorRotation());
+				GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + GetActorForwardVector() * 160.f, GetActorRotation());
 				LastShot = 0.f;
 			}
 		}

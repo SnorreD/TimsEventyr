@@ -17,6 +17,8 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	/** Returns CursorToWorld subobject **/
+	//FORCEINLINE class UDecalComponent* GetCursorToWorld() { return CursorToWorld; }
 
 public:
 	// Called every frame
@@ -28,10 +30,7 @@ public:
 	void MoveX(float AxisValue);
 	void MoveY(float AxisValue);
 	void Jump();
-	void AttackUp();
-	void AttackDown();
-	void AttackLeft();
-	void AttackRight();
+	void Attack();
 	void Modus1();
 	void Modus2();
 	void Modus3();

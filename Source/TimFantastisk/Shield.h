@@ -3,42 +3,33 @@
 #pragma once
 
 #include "GameFramework/Actor.h"
-#include "Fiende.generated.h"
+#include "Shield.generated.h"
 
 UCLASS()
-class TIMFANTASTISK_API AFiende : public AActor
+class TIMFANTASTISK_API AShield : public AActor
 {
 	GENERATED_BODY()
-
-public:
+	
+public:	
 	// Sets default values for this actor's properties
-	AFiende();
+	AShield();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:
+public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	FVector CurrentVelocity;
-	FVector NewDirection;
-
-	void ImHit(float Damage);
-
 	UPROPERTY(EditAnywhere)
 		UShapeComponent* RootCapsule = nullptr;
-
-	float Health{ 2.f };
-	bool Faen{ false };
-
-	float HitBackTime{ 3.5f };
 
 	UFUNCTION()
 		void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor,
 			UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex,
 			bool bFromSweep, const FHitResult &SweepResult);
 
+	float Health = 10.f;
 
 };

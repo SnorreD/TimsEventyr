@@ -29,14 +29,32 @@ ATim::ATim()
 
 	// Don't rotate character to camera direction
 	//bUseControllerRotationPitch = false;
-	bUseControllerRotationYaw = false;
+	//bUseControllerRotationYaw = false;
 	//bUseControllerRotationRoll = false;
 
 	// Configure character movement
-	GetCharacterMovement()->bOrientRotationToMovement = true; // Rotate character to moving direction
-	GetCharacterMovement()->RotationRate = FRotator(0.f, 690.f, 0.f);
+	//GetCharacterMovement()->bOrientRotationToMovement = true; // Rotate character to moving direction
+	//GetCharacterMovement()->RotationRate = FRotator(0.f, 690.f, 0.f);
 	//GetCharacterMovement()->bConstrainToPlane = true;
 	//GetCharacterMovement()->bSnapToPlaneAtStart = true;
+
+	//Create a decal in the world to show the cursor's location
+	CursorToWorld = CreateDefaultSubobject<UDecalComponent>("CursorToWorld");
+	CursorToWorld->SetupAttachment(RootComponent);
+	static ConstructorHelpers::FObjectFinder<UMaterial> DecalMaterialAsset(TEXT("Content'/Assets/M_Cursor_Decal'"));
+	if (DecalMaterialAsset.Succeeded())
+	{
+		CursorToWorld->SetDecalMaterial(DecalMaterialAsset.Object);
+	}
+	CursorToWorld->DecalSize = FVector(16.0f, 32.0f, 32.0f);
+	CursorToWorld->SetRelativeRotation(FRotator(90.0f, 0.0f, 0.0f).Quaternion());
+	//APlayerController* MyController = GetWorld()->GetFirstPlayerController();
+		//MyController->bShowMouseCursor = true;
+
+
+	// Activate ticking in order to update the cursor every frame.
+	//PrimaryActorTick.bCanEverTick = true;
+	//PrimaryActorTick.bStartWithTickEnabled = true;
 }
 
 // Called when the game starts or when spawned
@@ -50,6 +68,30 @@ void ATim::BeginPlay()
 void ATim::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	/// Move the cursor
+	FHitResult Hit;
+	bool HitResult = false;
+
+	HitResult = GetWorld()->GetFirstPlayerController()->GetHitResultUnderCursorByChannel(UEngineTypes::ConvertToTraceType(ECC_WorldStatic), true, Hit);
+
+	if (HitResult)
+	{
+		FVector CursorFV = Hit.ImpactNormal;
+		FRotator CursorR = CursorFV.Rotation();
+		CursorToWorld->SetWorldLocation(Hit.Location);
+		CursorToWorld->SetWorldRotation(CursorR);
+
+		///Set the new direction of the pawn:
+		FVector CursorLocation = Hit.Location;
+		UE_LOG(LogTemp, Warning, TEXT("Hit location %s!"), *Hit.Location.ToString());
+		FVector TempLocation = FVector(CursorLocation.X, CursorLocation.Y, 30.f);
+
+		FVector NewDirection = TempLocation - GetActorLocation();
+		NewDirection.Z = 0.f;
+		NewDirection.Normalize();
+		SetActorRotation(NewDirection.Rotation());
+	}
 
 	if (Skytesperre == true)
 	{
@@ -66,6 +108,7 @@ void ATim::Tick(float DeltaTime)
 	{
 		UGameplayStatics::OpenLevel(GetWorld(), "Prototype_Map");
 	}
+
 }
 
 // Called to bind functionality to input
@@ -78,10 +121,7 @@ void ATim::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 	InputComponent->BindAction("Jump", IE_Pressed, this, &ATim::Jump);
 
-	InputComponent->BindAction("AttackUp", IE_Pressed, this, &ATim::AttackUp);
-	InputComponent->BindAction("AttackDown", IE_Pressed, this, &ATim::AttackDown);
-	InputComponent->BindAction("AttackLeft", IE_Pressed, this, &ATim::AttackLeft);
-	InputComponent->BindAction("AttackRight", IE_Pressed, this, &ATim::AttackRight);
+	InputComponent->BindAction("Attack", IE_Pressed, this, &ATim::Attack);
 
 	InputComponent->BindAction("Mode1", IE_Pressed, this, &ATim::Modus1);
 	InputComponent->BindAction("Mode2", IE_Pressed, this, &ATim::Modus2);
@@ -111,61 +151,20 @@ void ATim::Jump()
 	ACharacter::Jump();
 }
 
-void ATim::AttackUp()
+void ATim::Attack()
 {
 	
 	if (Skytesperre != true)
 	{
 		if (Mode == 1)
-			GetWorld()->SpawnActor<AMelee>(MeleeBlueprint, GetActorLocation() + FVector(1.f, 0.f, 0.f) * 100.f, FRotator(90.f, 0.f, 0.f));
+			GetWorld()->SpawnActor<AMelee>(MeleeBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, FRotator(90.f, GetActorRotation().Yaw, GetActorRotation().Roll));
 		if (Mode == 2)
-			GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + FVector(1.f, 0.f, 0.f) * 100.f, FRotator(0.f, 0.f, 0.f));
+			GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
 
 		Skytesperre = true;
 	}
 }
 
-void ATim::AttackDown()
-{
-	
-	if (Skytesperre != true)
-	{
-		if (Mode == 1)
-			GetWorld()->SpawnActor<AMelee>(MeleeBlueprint, GetActorLocation() + FVector(1.f, 0.f, 0.f) * -100.f, FRotator(90.f, 180.f, 0.f));
-		if (Mode == 2)
-			GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + FVector(1.f, 0.f, 0.f) * -100.f, FRotator(0.f, 180.f, 0.f));
-
-		Skytesperre = true;
-	}
-}
-
-void ATim::AttackLeft()
-{
-	
-	if (Skytesperre != true)
-	{
-		if (Mode == 1)
-			GetWorld()->SpawnActor<AMelee>(MeleeBlueprint, GetActorLocation() + FVector(0.f, 1.f, 0.f) * -100.f, FRotator(90.f, -90.f, 0.f));
-		if (Mode == 2)
-			GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + FVector(0.f, 1.f, 0.f) * -100.f, FRotator(0.f, -90.f, 0.f));
-
-		Skytesperre = true;
-	}
-}
-
-void ATim::AttackRight()
-{
-	
-	if (Skytesperre != true)
-	{
-		if (Mode == 1)
-			GetWorld()->SpawnActor<AMelee>(MeleeBlueprint, GetActorLocation() + FVector(0.f, 1.f, 0.f) * 100.f, FRotator(90.f, 90.f, 0.f));
-		if (Mode == 2)
-			GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + FVector(0.f, 1.f, 0.f) * 100.f, FRotator(0.f, 90.f, 0.f));
-
-		Skytesperre = true;
-	}
-}
 
 void ATim::Modus1()
 {
