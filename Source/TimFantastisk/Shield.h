@@ -22,8 +22,16 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	void DestroyShield();
+
 	UPROPERTY(EditAnywhere)
 		UShapeComponent* RootCapsule = nullptr;
+
+	UPROPERTY(EditAnywhere)
+		float CurrentCooldownTime = 0;
+
+	UPROPERTY(EditAnywhere)
+		float TotalCooldownTime = 5.f;
 
 	UFUNCTION()
 		void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor,
@@ -31,5 +39,7 @@ public:
 			bool bFromSweep, const FHitResult &SweepResult);
 
 	float Health = 10.f;
+
+	bool Cooldown = false;
 
 };

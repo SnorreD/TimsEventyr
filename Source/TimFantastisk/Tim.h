@@ -31,6 +31,8 @@ public:
 	void MoveY(float AxisValue);
 	void Jump();
 	void Attack();
+	void Secondary();
+	void SecondaryOff();
 	void Modus1();
 	void Modus2();
 	void Modus3();
@@ -60,6 +62,8 @@ public:
 		TSubclassOf<class ABullet> BulletBlueprint;
 	UPROPERTY(EditAnywhere, Category = "Spawning")
 		TSubclassOf<class AMelee> MeleeBlueprint;
+	UPROPERTY(EditAnywhere, Category = "Spawning")
+		TSubclassOf<class AShield> ShieldBlueprint;
 
 	bool Skytesperre{ false };
 

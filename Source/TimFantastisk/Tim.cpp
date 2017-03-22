@@ -4,6 +4,7 @@
 #include "Tim.h"
 #include "Bullet.h"
 #include "Melee.h"
+#include "Shield.h"
 
 
 // Sets default values
@@ -122,6 +123,8 @@ void ATim::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	InputComponent->BindAction("Jump", IE_Pressed, this, &ATim::Jump);
 
 	InputComponent->BindAction("Attack", IE_Pressed, this, &ATim::Attack);
+	InputComponent->BindAction("Secondary", IE_Pressed, this, &ATim::Secondary);
+	InputComponent->BindAction("Secondary", IE_Released, this, &ATim::SecondaryOff);
 
 	InputComponent->BindAction("Mode1", IE_Pressed, this, &ATim::Modus1);
 	InputComponent->BindAction("Mode2", IE_Pressed, this, &ATim::Modus2);
@@ -165,6 +168,23 @@ void ATim::Attack()
 	}
 }
 
+void ATim::Secondary()
+{
+	if (Mode == 1)
+	{
+
+	}
+		//GetWorld()->SpawnActor<AShield>(ShieldBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
+}
+
+void ATim::SecondaryOff()
+{
+	if (Mode == 1)
+	{
+		
+	}
+		//GetWorld()->DestroyActor(*ShieldBlueprint);
+}
 
 void ATim::Modus1()
 {
@@ -180,6 +200,7 @@ void ATim::Modus3()
 {
 	Mode = 3;
 }
+
 
 void ATim::ImHit()
 {
