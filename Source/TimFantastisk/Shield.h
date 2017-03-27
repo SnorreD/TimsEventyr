@@ -22,7 +22,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void DestroyShield();
+	//void DestroyShield();
 
 	UPROPERTY(EditAnywhere)
 		UShapeComponent* RootCapsule = nullptr;
@@ -41,5 +41,7 @@ public:
 	float Health = 10.f;
 
 	bool Cooldown = false;
+
+	AActor *Tim;
 
 };

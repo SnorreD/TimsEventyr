@@ -33,7 +33,7 @@ public:
 	float Health{ 2.f };
 	bool Faen{ false };
 
-	float HitBackTime{ 3.5f };
+	float HitBackTime{ 4.5f };
 
 	UFUNCTION()
 		void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor,

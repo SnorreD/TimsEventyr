@@ -65,10 +65,20 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Spawning")
 		TSubclassOf<class AShield> ShieldBlueprint;
 
+	UFUNCTION()
+		void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor,
+			UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex,
+			bool bFromSweep, const FHitResult &SweepResult);
+
 	bool Skytesperre{ false };
 
 	UPROPERTY(EditAnywhere)
 		float AngrepMellomrom = 0.5f;
 
 	float TidSidenAngrep;
+
+	bool Climbing{ false };
+
+	AActor * Shield;
+	AActor * Sword;
 };

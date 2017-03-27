@@ -12,6 +12,8 @@ ATim::ATim()
 {
 	// Create a camera and a visible object
 	OurVisibleComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("OurVisibleComponent"));
+	GetCapsuleComponent()->bGenerateOverlapEvents = true;
+	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &ATim::OnOverlap);
 
 	// Create a camera boom...
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
@@ -56,6 +58,7 @@ ATim::ATim()
 	// Activate ticking in order to update the cursor every frame.
 	//PrimaryActorTick.bCanEverTick = true;
 	//PrimaryActorTick.bStartWithTickEnabled = true;
+
 }
 
 // Called when the game starts or when spawned
@@ -137,16 +140,24 @@ void ATim::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void ATim::MoveX(float AxisValue)
 {
-
-	AddMovementInput(FVector(1.f, 0.f, 0.f), AxisValue);
+	if (Climbing == true)
+	{
+		FPlane ;
+		AddMovementInput(FVector(0.f, 0.f, 1.f), AxisValue);
+		
+		//MOVE_Walking;
+		//bSimGravityDisabled = true;
+	}
+	else
+	{
+		AddMovementInput(FVector(1.f, 0.f, 0.f), AxisValue);
+	}
 
 }
 
 void ATim::MoveY(float AxisValue)
 {
-
-	AddMovementInput(FVector(0.f, 1.f, 0.f), AxisValue);
-
+		AddMovementInput(FVector(0.f, 1.f, 0.f), AxisValue);
 }
 
 void ATim::Jump()
@@ -160,7 +171,11 @@ void ATim::Attack()
 	if (Skytesperre != true)
 	{
 		if (Mode == 1)
-			GetWorld()->SpawnActor<AMelee>(MeleeBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, FRotator(90.f, GetActorRotation().Yaw, GetActorRotation().Roll));
+		{
+			Sword = GetWorld()->SpawnActor<AMelee>(MeleeBlueprint, GetActorLocation() + GetActorForwardVector() * 120.f, FRotator(90.f, GetActorRotation().Yaw, GetActorRotation().Roll));
+			Sword->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform, NAME_None);
+		}
+			
 		if (Mode == 2)
 			GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
 
@@ -172,7 +187,10 @@ void ATim::Secondary()
 {
 	if (Mode == 1)
 	{
+		Shield = GetWorld()->SpawnActor<AShield>(ShieldBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
+		Cast<AShield>(Shield)->Tim = this;
 
+		Shield->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform, NAME_None);
 	}
 		//GetWorld()->SpawnActor<AShield>(ShieldBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
 }
@@ -181,6 +199,10 @@ void ATim::SecondaryOff()
 {
 	if (Mode == 1)
 	{
+		if (Shield)
+		{
+			Cast<AShield>(Shield)->Destroy();
+		}
 		
 	}
 		//GetWorld()->DestroyActor(*ShieldBlueprint);
@@ -205,4 +227,19 @@ void ATim::Modus3()
 void ATim::ImHit()
 {
 	UGameplayStatics::OpenLevel(GetWorld(), "Prototype_Map");
+}
+
+
+void ATim::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor,
+	UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex,
+	bool bFromSweep, const FHitResult &SweepResult)
+{
+	if (OtherComponent - IsA(ATriggerVolume::StaticClass()))
+	{
+		//FString name = OtherComponent->GetName();
+		//if (name == "ClimbVolume")
+		//{
+			//Climbing = true;
+		//}
+	}
 }

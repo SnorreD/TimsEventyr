@@ -4,6 +4,7 @@
 #include "Shield.h"
 #include "Bullet.h"
 #include "Fiende.h"
+#include "Tim.h"
 
 
 // Sets default values
@@ -32,16 +33,21 @@ void AShield::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (Cooldown == true)
+	//if (Tim)
+	//{
+	//	Tim->UpdateComponentTransforms();
+	//	SetActorLocationAndRotation(Tim->GetActorLocation() + (Tim->GetActorForwardVector() * 100.f), Tim->GetActorRotation());
+	//}
+
+	/*if (Cooldown == true)
 	{
 		CurrentCooldownTime += DeltaTime;
 		if (CurrentCooldownTime > TotalCooldownTime)
 		{
 			Cooldown = false;
 		}
-	}
-
-
+	}*/
+	//FVector loc = Tim->GetActorLocation() + Tim->GetActorForwardVector() * 100.f;
 }
 
 void AShield::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor,
@@ -68,12 +74,7 @@ void AShield::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherA
 
 	if (Health == 0.f)
 	{
-		DestroyShield();
+		this->Destroy();
 	}
 
-}
-
-void AShield::DestroyShield()
-{
-	this->Destroy();
 }
