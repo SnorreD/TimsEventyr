@@ -61,12 +61,15 @@ void AShield::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherA
 
 	else if (OtherActor->IsA(ABullet::StaticClass()))
 	{
-		Cast<ABullet>(OtherActor)->Destroy();
+		//OtherActor->SetActorRotation(FRotator(OtherActor->GetActorRotation().Pitch, OtherActor->GetActorRotation().Yaw * +180, OtherActor->GetActorRotation().Roll));
+		Cast<ABullet>(OtherActor)->EnemyBullet = false;
+		if (Cast<ABullet>(OtherActor)->Speed > 0)
+			Cast<ABullet>(OtherActor)->Speed *= -1;
 
 		Health = Health - 1.f;
 	}
 
-	if (Health == 0.f)
+	if (Health <= 0.f)
 	{
 		DestroyShield();
 	}

@@ -5,6 +5,7 @@
 #include "Fiende.h"
 #include "Tim.h"
 #include "AvstandFiende.h"
+#include "Boss1.h"
 
 
 // Sets default values
@@ -50,30 +51,31 @@ void ABullet::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherA
 	bool bFromSweep, const FHitResult &SweepResult)
 {
 	//UE_LOG(LogTemp, Warning, TEXT("Bullet Overlap %s"), *OtherActor->GetName())
-	if (OtherActor->IsA(AFiende::StaticClass()))
+	if (OtherActor->IsA(AFiende::StaticClass()) && EnemyBullet == false)
 	{
-		Cast<AFiende>(OtherActor)->ImHit(Damage); //Alternativt bare OtherActor->Destroy();
-										   //PartikkelFX:
-										   //UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplotionFX, GetTransform(), true);
-
-										   //SoundFX
-										   //UGameplayStatics::PlaySound2D(GetWorld(), ExplotionSound, 1.f, 1.f, 0.f);
-										   //UGameplayStatics::PlaySoundAtLocation(GetWorld(), ExplotionSound, GetActorLocation());
-
-										   //Destroy Bullet:
+		Cast<AFiende>(OtherActor)->ImHit(Damage);
 		Destroy();
 	}
 
-	else if (OtherActor->IsA(ATim::StaticClass()))
+	else if (OtherActor->IsA(ATim::StaticClass()) && EnemyBullet == true)
 	{
 		Cast<ATim>(OtherActor)->ImHit(); //Alternativt bare OtherActor->Destroy();
 		Destroy();
 	}
 
-	else if (OtherActor->IsA(AAvstandFiende::StaticClass()))
+	else if (OtherActor->IsA(AAvstandFiende::StaticClass()) && EnemyBullet == false)
 	{
 		Cast<AAvstandFiende>(OtherActor)->ImHit(Damage); //Alternativt bare OtherActor->Destroy();
 		Destroy();
 	}
+	else if (OtherActor->IsA(ABoss1::StaticClass()) && EnemyBullet == false)
+	{
+		Cast<ABoss1>(OtherActor)->ImHit(Damage); //Alternativt bare OtherActor->Destroy();
+		Destroy();
+	}
+	//else
+	//{
+	//	Destroy();
+	//}
 }
 

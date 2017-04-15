@@ -26,12 +26,15 @@ public:
 		float Speed = 700.f;
 
 	UPROPERTY(EditAnywhere)
-		float TimeBeforeDestroy = 5.f;
+		float TimeBeforeDestroy = 500.f;
 
 	UPROPERTY(EditAnywhere)
 		float Damage = 0.5f;
 
-	float TimeLived{ 0 };
+	float TimeLived{ 0.f };
+
+	UPROPERTY(EditAnywhere)
+		bool EnemyBullet = true;
 
 	UPROPERTY(EditAnywhere)
 		UShapeComponent* RootSphere = nullptr;

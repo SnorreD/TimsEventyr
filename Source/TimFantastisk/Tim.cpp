@@ -185,7 +185,12 @@ void ATim::Attack()
 		}
 
 		if (Mode == 2)
-			GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
+		{
+			AActor *Bullet = GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
+			if (Bullet)
+				Cast<ABullet>(Bullet)->EnemyBullet = false;
+		}
+			
 
 		Skytesperre = true;
 	}
