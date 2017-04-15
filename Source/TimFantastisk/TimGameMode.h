@@ -15,6 +15,13 @@ class TIMFANTASTISK_API ATimGameMode : public AGameModeBase
 	
 		//UPROPERTY(EditAnywhere, Category = "Spawning")
 		//TSubclassOf<class ATim> TimBlueprint;
-	
+public:
+	ATimGameMode();
+
+	void SaveGame();
+	void LoadGame();
+
+	FString SpawnPlace = "Level1_1";
+	FName Map = "Prototype_Map";
 	
 };

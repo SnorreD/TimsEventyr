@@ -5,6 +5,7 @@
 #include "Bullet.h"
 #include "Melee.h"
 #include "Shield.h"
+#include "TimGameMode.h"
 
 
 // Sets default values
@@ -42,7 +43,7 @@ ATim::ATim()
 	//Create a decal in the world to show the cursor's location
 	CursorToWorld = CreateDefaultSubobject<UDecalComponent>("CursorToWorld");
 	CursorToWorld->SetupAttachment(RootComponent);
-	static ConstructorHelpers::FObjectFinder<UMaterial> DecalMaterialAsset(TEXT("Content'/Assets/M_Cursor_Decal'"));
+	static ConstructorHelpers::FObjectFinder<UMaterial> DecalMaterialAsset(TEXT("Game/Assets/M_Cursor_Decal"));
 	if (DecalMaterialAsset.Succeeded())
 	{
 		CursorToWorld->SetDecalMaterial(DecalMaterialAsset.Object);
@@ -62,6 +63,19 @@ ATim::ATim()
 void ATim::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (GetWorld())
+	{
+		Cast<ATimGameMode>(GetWorld()->GetAuthGameMode())->LoadGame();
+		if (Controller)
+		{
+			//Get the PlayerStart with the wanted tag:
+			AActor *NewPawn = Cast<ATimGameMode>(GetWorld()->GetAuthGameMode())->FindPlayerStart(Controller, Cast<ATimGameMode>(GetWorld()->GetAuthGameMode())->SpawnPlace);
+			SetActorLocation(NewPawn->GetActorLocation());
+			Controller->ClientSetRotation(NewPawn->GetActorRotation());
+		}
+	}
+	
 
 }
 
@@ -107,7 +121,7 @@ void ATim::Tick(float DeltaTime)
 	FVector TimHvorErDu = GetActorLocation();
 	if (TimHvorErDu.Z < -900.f)
 	{
-		UGameplayStatics::OpenLevel(GetWorld(), "Prototype_Map");
+		ATim::ImHit();
 	}
 
 }
@@ -160,7 +174,16 @@ void ATim::Attack()
 	if (Skytesperre != true)
 	{
 		if (Mode == 1)
-			GetWorld()->SpawnActor<AMelee>(MeleeBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, FRotator(90.f, GetActorRotation().Yaw, GetActorRotation().Roll));
+		{
+			if (ShieldOut == true)
+			{
+				Shield->Destroy();
+				ShieldOut = false;
+			}
+			AActor *Sword = GetWorld()->SpawnActor<AMelee>(MeleeBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, FRotator(90.f, GetActorRotation().Yaw, GetActorRotation().Roll));
+			Sword->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform, NAME_None);
+		}
+
 		if (Mode == 2)
 			GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
 
@@ -172,15 +195,21 @@ void ATim::Secondary()
 {
 	if (Mode == 1)
 	{
-
+		Shield = GetWorld()->SpawnActor<AShield>(ShieldBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
+		Shield->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform, NAME_None);
+		ShieldOut = true;
 	}
-		//GetWorld()->SpawnActor<AShield>(ShieldBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
 }
 
 void ATim::SecondaryOff()
 {
 	if (Mode == 1)
 	{
+		if (Shield)
+		{
+			Shield->Destroy();
+			ShieldOut = false;
+		}
 		
 	}
 		//GetWorld()->DestroyActor(*ShieldBlueprint);
@@ -193,6 +222,11 @@ void ATim::Modus1()
 
 void ATim::Modus2()
 {
+	if (ShieldOut == true)
+	{
+		Shield->Destroy();
+		ShieldOut = false;
+	}
 	Mode = 2;
 }
 
@@ -204,5 +238,8 @@ void ATim::Modus3()
 
 void ATim::ImHit()
 {
-	UGameplayStatics::OpenLevel(GetWorld(), "Prototype_Map");
+	if (Shield)
+		Shield->Destroy();
+	Map = Cast<ATimGameMode>(GetWorld()->GetAuthGameMode())->Map;
+	UGameplayStatics::OpenLevel(GetWorld(), Map);
 }

@@ -39,7 +39,7 @@ public:
 	void ImHit();
 
 	FVector CurrentVelocity;
-	int Mode;
+	int Mode = 1;
 
 	UPROPERTY(EditAnywhere)
 		int Speed = 400;
@@ -65,10 +65,16 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Spawning")
 		TSubclassOf<class AShield> ShieldBlueprint;
 
+	AActor *Shield;
+
+	bool ShieldOut = false;
+
 	bool Skytesperre{ false };
 
 	UPROPERTY(EditAnywhere)
 		float AngrepMellomrom = 0.5f;
 
 	float TidSidenAngrep;
+
+	FName Map;
 };
