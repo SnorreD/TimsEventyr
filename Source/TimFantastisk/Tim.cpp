@@ -124,6 +124,16 @@ void ATim::Tick(float DeltaTime)
 		ATim::ImHit();
 	}
 
+	if (ShieldHealth <= 0.f)
+	{
+		ShieldDestroyed += DeltaTime;
+		if (ShieldDestroyed > ShieldTimer)
+		{
+			ShieldHealth = 10.f;
+			ShieldDestroyed = 0.f;
+		}
+	}
+
 }
 
 // Called to bind functionality to input
@@ -198,7 +208,7 @@ void ATim::Attack()
 
 void ATim::Secondary()
 {
-	if (Mode == 1)
+	if (Mode == 1 && ShieldHealth > 0.f)
 	{
 		Shield = GetWorld()->SpawnActor<AShield>(ShieldBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
 		Shield->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform, NAME_None);
@@ -214,6 +224,7 @@ void ATim::SecondaryOff()
 		{
 			Shield->Destroy();
 			ShieldOut = false;
+			ShieldHealth = Cast<AShield>(Shield)->Health;
 		}
 		
 	}

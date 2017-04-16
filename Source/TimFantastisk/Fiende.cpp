@@ -38,18 +38,27 @@ void AFiende::Tick(float DeltaTime)
 
 	if (Faen == true)
 	{
-		for (float TimeHit = 0.f; TimeHit < HitBackTime; ++TimeHit)
+		if (CurrentVelocity.X > 0)
 		{
-			FVector LocationWhenHit = GetActorLocation();
-			LocationWhenHit.Z = LocationWhenHit.Z + 20.f;
-			SetActorLocation(LocationWhenHit);
+			CurrentVelocity.X = CurrentVelocity.X * -0.5f;
+			CurrentVelocity.Y = CurrentVelocity.Y * -0.5f;
+		}
+
+		LastHit += DeltaTime;
+		if (LastHit > HitBackTime)
+		{
+			Faen = false;
+			CurrentVelocity.X = CurrentVelocity.X * -1.5f;
+			CurrentVelocity.Y = CurrentVelocity.Y * -1.5f;
 		};
-		Faen = false;
+		FVector LocationWhenHit = GetActorLocation();
+		LocationWhenHit.Z = LocationWhenHit.Z + 2.f;
+		SetActorLocation(LocationWhenHit);
 	}
 
 	if (!CurrentVelocity.IsZero())
 	{
-		if ((NewDirection.X < 600.0f && NewDirection.X > -600.0f) && (NewDirection.Y < 600.0f && NewDirection.Y > -600.0f))
+		if ((NewDirection.X < 900.0f && NewDirection.X > -900.0f) && (NewDirection.Y < 900.0f && NewDirection.Y > -900.0f))
 		{
 			FVector NewLocation = GetActorLocation() + GetActorForwardVector()*(CurrentVelocity * DeltaTime);
 			SetActorLocation(NewLocation);
@@ -79,8 +88,7 @@ void AFiende::ImHit(float Damage)
 			this->Destroy();
 		}
 	}
-	
-	Damage = 0;
+
 	Faen = true;
 }
 

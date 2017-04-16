@@ -39,7 +39,7 @@ public:
 	void ImHit();
 
 	FVector CurrentVelocity;
-	int Mode = 1;
+	int Mode{ 1 };
 
 	UPROPERTY(EditAnywhere)
 		int Speed = 400;
@@ -67,7 +67,7 @@ public:
 
 	AActor *Shield;
 
-	bool ShieldOut = false;
+	bool ShieldOut{ false };
 
 	bool Skytesperre{ false };
 
@@ -77,4 +77,8 @@ public:
 	float TidSidenAngrep;
 
 	FName Map;
+
+	float ShieldHealth{ 10.f };
+	float ShieldTimer{ 20.f };
+	float ShieldDestroyed{ 0.f };
 };
