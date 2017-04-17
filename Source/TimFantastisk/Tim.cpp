@@ -124,13 +124,15 @@ void ATim::Tick(float DeltaTime)
 		ATim::ImHit();
 	}
 
-	if (ShieldHealth <= 0.f)
+	if (ShieldDestruction == true)
 	{
 		ShieldDestroyed += DeltaTime;
+		ShieldHealth = ShieldDestroyed * 0.5f;
 		if (ShieldDestroyed > ShieldTimer)
 		{
 			ShieldHealth = 10.f;
 			ShieldDestroyed = 0.f;
+			ShieldDestruction = false;
 		}
 	}
 
@@ -208,10 +210,11 @@ void ATim::Attack()
 
 void ATim::Secondary()
 {
-	if (Mode == 1 && ShieldHealth > 0.f)
+	if (Mode == 1 && ShieldDestruction == false)
 	{
 		Shield = GetWorld()->SpawnActor<AShield>(ShieldBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
 		Shield->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform, NAME_None);
+		Cast<AShield>(Shield)->Health = ShieldHealth;
 		ShieldOut = true;
 	}
 }
@@ -224,7 +227,8 @@ void ATim::SecondaryOff()
 		{
 			Shield->Destroy();
 			ShieldOut = false;
-			ShieldHealth = Cast<AShield>(Shield)->Health;
+			if (ShieldHealth <= 0.f)
+				ShieldDestruction = true;
 		}
 		
 	}
@@ -254,8 +258,12 @@ void ATim::Modus3()
 
 void ATim::ImHit()
 {
-	if (Shield)
-		Shield->Destroy();
-	Map = Cast<ATimGameMode>(GetWorld()->GetAuthGameMode())->Map;
-	UGameplayStatics::OpenLevel(GetWorld(), Map);
+	Health -= 1;
+	if (Health <= 0)
+	{
+		if (Shield)
+			Shield->Destroy();
+		Map = Cast<ATimGameMode>(GetWorld()->GetAuthGameMode())->Map;
+		UGameplayStatics::OpenLevel(GetWorld(), Map);
+	}
 }

@@ -55,7 +55,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		class USpringArmComponent* CameraBoom;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		class UDecalComponent* CursorToWorld;
 
 	UPROPERTY(EditAnywhere, Category = "Spawning")
@@ -78,7 +78,15 @@ public:
 
 	FName Map;
 
-	float ShieldHealth{ 10.f };
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		float ShieldHealth = 10.f;
+
 	float ShieldTimer{ 20.f };
-	float ShieldDestroyed{ 0.f };
+
+	float ShieldDestroyed = 0.f;
+
+	bool ShieldDestruction = false;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		int Health = 3;
 };

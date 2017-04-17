@@ -99,12 +99,10 @@ void AFiende::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherA
 	//UE_LOG(LogTemp, Warning, TEXT("Bullet Overlap %s"), *OtherActor->GetName())
 	if (OtherActor->IsA(ATim::StaticClass()))
 	{
-		Cast<ATim>(OtherActor)->ImHit(); //Alternativt bare OtherActor->Destroy();
-												//PartikkelFX:
-												//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplotionFX, GetTransform(), true);
-
-												//SoundFX
-												//UGameplayStatics::PlaySound2D(GetWorld(), ExplotionSound, 1.f, 1.f, 0.f);
-												//UGameplayStatics::PlaySoundAtLocation(GetWorld(), ExplotionSound, GetActorLocation());
+		if (Faen == false)
+		{
+			Faen = true;
+			Cast<ATim>(OtherActor)->ImHit();
+		}
 	}
 }

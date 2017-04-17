@@ -4,6 +4,7 @@
 #include "Shield.h"
 #include "Bullet.h"
 #include "Fiende.h"
+#include "Tim.h"
 
 
 // Sets default values
@@ -61,12 +62,17 @@ void AShield::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherA
 
 	else if (OtherActor->IsA(ABullet::StaticClass()))
 	{
-		//OtherActor->SetActorRotation(FRotator(OtherActor->GetActorRotation().Pitch, OtherActor->GetActorRotation().Yaw * +180, OtherActor->GetActorRotation().Roll));
-		Cast<ABullet>(OtherActor)->EnemyBullet = false;
-		if (Cast<ABullet>(OtherActor)->Speed > 0)
-			Cast<ABullet>(OtherActor)->Speed *= -1;
+		if (Cast<ABullet>(OtherActor)->EnemyBullet == true)
+		{
+			//OtherActor->SetActorRotation(FRotator(OtherActor->GetActorRotation().Pitch, OtherActor->GetActorRotation().Yaw * +180, OtherActor->GetActorRotation().Roll));
+			Cast<ABullet>(OtherActor)->EnemyBullet = false;
+			if (Cast<ABullet>(OtherActor)->Speed > 0)
+				Cast<ABullet>(OtherActor)->Speed *= -1;
 
-		Health = Health - 1.f;
+			Health = Health - 1.f;
+			ACharacter* myCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+			Cast<ATim>(myCharacter)->ShieldHealth = Health;
+		}
 	}
 
 	if (Health <= 0.f)
