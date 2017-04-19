@@ -3,16 +3,16 @@
 #pragma once
 
 #include "GameFramework/Actor.h"
-#include "Shield.generated.h"
+#include "ChangeCameraAngle.generated.h"
 
 UCLASS()
-class TIMFANTASTISK_API AShield : public AActor
+class TIMFANTASTISK_API AChangeCameraAngle : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AShield();
+	AChangeCameraAngle();
 
 protected:
 	// Called when the game starts or when spawned
@@ -22,24 +22,18 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void DestroyShield();
-
 	UPROPERTY(EditAnywhere)
 		UShapeComponent* RootCapsule = nullptr;
-
-	UPROPERTY(EditAnywhere)
-		float CurrentCooldownTime = 0;
-
-	UPROPERTY(EditAnywhere)
-		float TotalCooldownTime = 0.5f;
 
 	UFUNCTION()
 		void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor,
 			UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex,
 			bool bFromSweep, const FHitResult &SweepResult);
 
-	float Health = 10.f;
+	UPROPERTY(EditAnywhere, Category = "Camera")
+		float ArmLenght = 1000.f;
 
-	bool Cooldown = false;
-
+	UPROPERTY(EditAnywhere, Category = "Camera")
+		FRotator CameraRotation = FRotator(-60.f, 0.f, 0.f);
+	
 };

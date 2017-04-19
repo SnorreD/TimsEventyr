@@ -34,7 +34,7 @@ public:
 	float LastShot{ 0.f };
 	float TimeBetweenShots{ 0.1f };
 
-	float Health{ 4.f };
+	float Health{ 10.f };
 	FVector NewDirection;
 	int Mode = 1;
 	float ModeChangeTime = FMath::FRandRange(10.f, 20.f);

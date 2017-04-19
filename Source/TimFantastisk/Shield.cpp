@@ -54,6 +54,8 @@ void AShield::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherA
 		if (Cooldown == false)
 		{
 			Health = Health - 1.f;
+			ACharacter* myCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+			Cast<ATim>(myCharacter)->ShieldHealth = Health;
 
 			Cooldown = true;
 		}
