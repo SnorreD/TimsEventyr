@@ -4,79 +4,72 @@
 #include "Fiende.h"
 #include "Tim.h"
 #include "Bullet.h"
+#include "TimGameMode.h"
 
 
-// Sets default values
 AFiende::AFiende()
 {
-	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	RootCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("MyEnemy"));
-	RootComponent = RootCapsule;
-	RootCapsule->SetSimulatePhysics(true);
-	RootCapsule->bGenerateOverlapEvents = true;
-	RootCapsule->OnComponentBeginOverlap.AddDynamic(this, &AFiende::OnOverlap);
-
-	CurrentVelocity.X = 300.0f;
-	CurrentVelocity.Y = 300.0f;
-	//CurrentVelocity.Z = 300.0f;
-
+	RootSphere = CreateDefaultSubobject<USphereComponent>(TEXT("HitBox"));
+	RootSphere->bGenerateOverlapEvents = true;
+	RootSphere->OnComponentBeginOverlap.AddDynamic(this, &AFiende::OnOverlap);
+	RootSphere->AttachToComponent(RootComponent, FAttachmentTransformRules(EAttachmentRule::KeepRelative, true));
 }
 
-// Called when the game starts or when spawned
 void AFiende::BeginPlay()
 {
 	Super::BeginPlay();
 
 }
 
-// Called every frame
 void AFiende::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (Faen == true)
+	//Har fienden nylig blitt angrepet eller angrepi?
+	//Hvis ja hopper den opp og går bakover.
+
+	if (Faen == true || Angrep == true)
 	{
-		if (CurrentVelocity.X > 0)
+		if (Direction > 0)
 		{
-			CurrentVelocity.X = CurrentVelocity.X * -0.5f;
-			CurrentVelocity.Y = CurrentVelocity.Y * -0.5f;
+			Direction = -0.5f;
+			Jump();
 		}
 
 		LastHit += DeltaTime;
 		if (LastHit > HitBackTime)
 		{
-			Faen = false;
-			CurrentVelocity.X = CurrentVelocity.X * -1.5f;
-			CurrentVelocity.Y = CurrentVelocity.Y * -1.5f;
-		};
-		FVector LocationWhenHit = GetActorLocation();
-		LocationWhenHit.Z = LocationWhenHit.Z + 2.f;
-		SetActorLocation(LocationWhenHit);
-	}
+			if (Faen == true)
+				Faen = false;
+			else
+				Angrep = false;
 
-	if (!CurrentVelocity.IsZero())
-	{
-		if ((NewDirection.X < 900.0f && NewDirection.X > -900.0f) && (NewDirection.Y < 900.0f && NewDirection.Y > -900.0f))
-		{
-			FVector NewLocation = GetActorLocation() + GetActorForwardVector()*(CurrentVelocity * DeltaTime);
-			SetActorLocation(NewLocation);
+			Direction = 1.f;
+			LastHit = 0.f;
 		}
-		
 	}
 
-	ACharacter* myCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	//Følger etter spilleren hvis spilleren er nær nok.
+	if (NewDirection.Size() < AttackDistance)
+		AddMovementInput(GetActorForwardVector(), Direction);
 
-	FVector EnemyLocation = GetActorLocation();
-	FVector PlayerLocation = myCharacter->GetActorLocation();
-	NewDirection = PlayerLocation - EnemyLocation;
+	//Finner spillerens posisjon og roterer seg mot spilleren
+	NewDirection = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)->GetActorLocation() - GetActorLocation();
 	NewDirection.Z = 0.f;
 	SetActorRotation(NewDirection.Rotation());
+
+	//Dreper fienden hvis han har falt utenfor kartet.
+	if (GetActorLocation().Z < Cast<ATimGameMode>(GetWorld()->GetAuthGameMode())->KillZ)
+	{
+		Destroy();
+	}
 
 
 }
 
+//Hvis den er skadet og ikke har blitt skadet i nær tid, tar den skade og hopper bakover.
 void AFiende::ImHit(float Damage)
 {
 	if (Faen == false)
@@ -96,13 +89,13 @@ void AFiende::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherA
 	UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex,
 	bool bFromSweep, const FHitResult &SweepResult)
 {
-	//UE_LOG(LogTemp, Warning, TEXT("Bullet Overlap %s"), *OtherActor->GetName())
+	//Hvis fienden rører spilleren tar den et liv fra spilleren.
 	if (OtherActor->IsA(ATim::StaticClass()))
 	{
 		if (Faen == false)
 		{
-			Faen = true;
-			Cast<ATim>(OtherActor)->ImHit();
+			Cast<ATim>(OtherActor)->ImHit(1.f);
+			Angrep = true;
 		}
 	}
 }

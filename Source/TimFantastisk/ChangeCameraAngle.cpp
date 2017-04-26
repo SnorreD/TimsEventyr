@@ -7,10 +7,8 @@
 
 
 
-// Sets default values
 AChangeCameraAngle::AChangeCameraAngle()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	PrimaryActorTick.bCanEverTick = true;
@@ -21,14 +19,12 @@ AChangeCameraAngle::AChangeCameraAngle()
 
 }
 
-// Called when the game starts or when spawned
 void AChangeCameraAngle::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
-// Called every frame
 void AChangeCameraAngle::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -39,6 +35,7 @@ void AChangeCameraAngle::OnOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 	UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex,
 	bool bFromSweep, const FHitResult &SweepResult)
 {
+	//Hvis spilleren kommer borti denne blir kameraet forandret basert på 'ArmLenght' og 'CameraRotation' variablen, før den ødelgger seg selv.
 	if (OtherActor->IsA(ATim::StaticClass()))
 	{
 		USpringArmComponent *Camera = Cast<ATim>(OtherActor)->CameraBoom;

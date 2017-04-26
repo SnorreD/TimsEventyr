@@ -8,6 +8,7 @@
 
 UMySaveGame::UMySaveGame()
 {
-	Level = "Level1_1";
-	Map = "Prototype_Map";
+	//Informasjon om lagresporet.
+	SaveSlotName = TEXT("SaveSlot");
+	UserIndex = 0;
 }

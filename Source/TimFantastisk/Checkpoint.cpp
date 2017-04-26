@@ -7,10 +7,8 @@
 #include "MySaveGame.h"
 
 
-// Sets default values
 ACheckpoint::ACheckpoint()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	RootBox = CreateDefaultSubobject<UBoxComponent>(TEXT("MySphere"));
@@ -20,14 +18,12 @@ ACheckpoint::ACheckpoint()
 
 }
 
-// Called when the game starts or when spawned
 void ACheckpoint::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
-// Called every frame
 void ACheckpoint::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -40,20 +36,15 @@ void ACheckpoint::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *Ot
 {
 	if (OtherActor->IsA(ATim::StaticClass()))
 	{
-		if (Cast<ATimGameMode>(GetWorld()->GetAuthGameMode())->SpawnPlace == NewCheck)
-		{
-			Destroy();
-		}
-		else
-		{
-			UMySaveGame* SavedGame = Cast<UMySaveGame>(UGameplayStatics::CreateSaveGameObject(UMySaveGame::StaticClass()));
-			SavedGame->Map = Map;
-			SavedGame->Level = NewCheck;
+		//Her lagres det informasjonen om hvem checkpoint man er i og hvilke kart når spilleren kommer borti.
+		UMySaveGame* LoadGameInstance = Cast<UMySaveGame>(UGameplayStatics::CreateSaveGameObject(UMySaveGame::StaticClass()));
+		LoadGameInstance = Cast<UMySaveGame>(UGameplayStatics::LoadGameFromSlot(LoadGameInstance->SaveSlotName, LoadGameInstance->UserIndex));
+		UMySaveGame* SaveGameInstance = Cast<UMySaveGame>(UGameplayStatics::CreateSaveGameObject(UMySaveGame::StaticClass()));
+		SaveGameInstance->Map = Map;
+		SaveGameInstance->Level = NewCheck;
+		UGameplayStatics::SaveGameToSlot(SaveGameInstance, SaveGameInstance->SaveSlotName, SaveGameInstance->UserIndex);
 
-			UGameplayStatics::SaveGameToSlot(SavedGame, TEXT("LevelChange"), 0);
-
-			Destroy();
-		}	
+		Destroy();
 	}
 }
 

@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "MySaveGame.h"
+#include "Kismet/GameplayStatics.h"
 #include "GameFramework/Actor.h"
 #include "Checkpoint.generated.h"
 
@@ -11,15 +13,15 @@ class TIMFANTASTISK_API ACheckpoint : public AActor
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
+
 	ACheckpoint();
 
 protected:
-	// Called when the game starts or when spawned
+
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
+
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(EditAnywhere)
@@ -30,9 +32,10 @@ public:
 			UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex,
 			bool bFromSweep, const FHitResult &SweepResult);
 
+	//Den nye playerstart og kartet.
 	UPROPERTY(EditAnywhere)
 		FString NewCheck = "Level1_1";
 	UPROPERTY(EditAnywhere)
-		FName Map = "Prototype_Map";
+		FName Map = "Skylevel";
 	
 };

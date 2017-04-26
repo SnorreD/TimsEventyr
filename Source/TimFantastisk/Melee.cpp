@@ -10,7 +10,6 @@
 // Sets default values
 AMelee::AMelee()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	RootCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("MySword"));
@@ -21,7 +20,6 @@ AMelee::AMelee()
 
 }
 
-// Called when the game starts or when spawned
 void AMelee::BeginPlay()
 {
 	Super::BeginPlay();
@@ -33,6 +31,7 @@ void AMelee::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	//Sverdet liver bare en kort stund før den blir ødelagt.
 	TimeLived += DeltaTime;
 	if (TimeLived > TimeBeforeDestroy)
 	{
@@ -45,32 +44,20 @@ void AMelee::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherAc
 	UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex,
 	bool bFromSweep, const FHitResult &SweepResult)
 {
-	//UE_LOG(LogTemp, Warning, TEXT("Bullet Overlap %s"), *OtherActor->GetName())
+	//Hvis sverdet treffer en fiende tar fienden skade.
 	if (OtherActor->IsA(AFiende::StaticClass()))
 	{
-		Cast<AFiende>(OtherActor)->ImHit(Damage); //Alternativt bare OtherActor->Destroy();
-											//PartikkelFX:
-											//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplotionFX, GetTransform(), true);
-
-											//SoundFX
-											//UGameplayStatics::PlaySound2D(GetWorld(), ExplotionSound, 1.f, 1.f, 0.f);
-											//UGameplayStatics::PlaySoundAtLocation(GetWorld(), ExplotionSound, GetActorLocation());
-
-											//Destroy Bullet:
-		//Destroy();
+		Cast<AFiende>(OtherActor)->ImHit(Damage);
 	}
 	if (OtherActor->IsA(AAvstandFiende::StaticClass()))
 	{
-		Cast<AAvstandFiende>(OtherActor)->ImHit(Damage); //Alternativt bare OtherActor->Destroy();
-
-		//Destroy();
+		Cast<AAvstandFiende>(OtherActor)->ImHit(Damage);
 	}
 
+	//Hvis sverdet treffer en kule ødeleges kulen.
 	if (OtherActor->IsA(ABullet::StaticClass()))
 	{
 		Cast<ABullet>(OtherActor)->Destroy();
-
-		//Destroy();
 	}
 }
 

@@ -11,15 +11,15 @@ class TIMFANTASTISK_API AHjernetrim1 : public AActor
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
+
 	AHjernetrim1();
 
 protected:
-	// Called when the game starts or when spawned
+
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
+
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(EditAnywhere)
@@ -36,6 +36,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		bool PlayerActivate = false;
 
+	//Lys og dems farge verdi. 1 = Rød, 2 = Oransje, 3 = Lilla og 4 = Blå.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Light, meta = (AllowPrivateAccess = "true"))
 		int Light1 = 1;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Light, meta = (AllowPrivateAccess = "true"))

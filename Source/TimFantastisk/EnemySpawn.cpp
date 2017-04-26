@@ -7,10 +7,8 @@
 #include "Tim.h"
 
 
-// Sets default values
 AEnemySpawn::AEnemySpawn()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	RootSphere = CreateDefaultSubobject<USphereComponent>(TEXT("MySphere"));
@@ -18,28 +16,27 @@ AEnemySpawn::AEnemySpawn()
 
 }
 
-// Called when the game starts or when spawned
 void AEnemySpawn::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
-// Called every frame
 void AEnemySpawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	ACharacter* myCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
-	FVector EnemyLocation = GetActorLocation();
-	FVector PlayerLocation = myCharacter->GetActorLocation();
-	PlayerDistance = PlayerLocation - EnemyLocation;
+	//Finner spillerens plassering og roterer etter den.
+	FVector Distance = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)->GetActorLocation() - GetActorLocation();
+	Distance.Z = 0.f;
 
-	if ((PlayerDistance.X < 600.0f && PlayerDistance.X > -600.0f) && (PlayerDistance.Y < 600.0f && PlayerDistance.Y > -600.0f))
+	//Sjekker om spilleren er nær.
+	if (Distance.Size() < SpawnDistance)
 	{
 		PlayerClose = true;
 	}
 
+	//Hvis spilleren er nær gyter den ut fiender med en forsinkelse mellom.
 	if (PlayerClose == true)
 	{
 		LastSpawn += DeltaTime;
@@ -47,7 +44,7 @@ void AEnemySpawn::Tick(float DeltaTime)
 		{
 			if (CloseRangeEnemy == true)
 			{
-				GetWorld()->SpawnActor<AFiende>(FiendeBlueprint, GetActorLocation() + FVector(1.f, 0.f, 0.f) * 100.f, FRotator(90.f, 0.f, 0.f));
+				GetWorld()->SpawnActor<AFiende>(FiendeBlueprint2, GetActorLocation(), FRotator(90.f, 0.f, 0.f));
 				LastSpawn = 0.f;
 				++AmountSpawned;
 			}
@@ -62,6 +59,7 @@ void AEnemySpawn::Tick(float DeltaTime)
 	}
 	
 
+	//Når gyteren har gyte ut nok fiender ødelegges den.
 	if (NumberOfEnemies <= AmountSpawned)
 	{
 		this->Destroy();

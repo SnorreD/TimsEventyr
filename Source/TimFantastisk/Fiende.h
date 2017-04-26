@@ -6,35 +6,45 @@
 #include "Fiende.generated.h"
 
 UCLASS()
-class TIMFANTASTISK_API AFiende : public AActor
+class TIMFANTASTISK_API AFiende : public ACharacter
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this actor's properties
+
 	AFiende();
 
 protected:
-	// Called when the game starts or when spawned
+
 	virtual void BeginPlay() override;
 
 public:
-	// Called every frame
+
 	virtual void Tick(float DeltaTime) override;
 
-	FVector CurrentVelocity;
+	FVector CurrentVelocity{ 300.f, 300.f, 0.f };
 	FVector NewDirection;
 
 	void ImHit(float Damage);
 
-	UPROPERTY(EditAnywhere)
-		UShapeComponent* RootCapsule = nullptr;
+	//Sirkelen som tar skade på spilleren.
+	UPROPERTY(EditAnywhere, Category = "Attack")
+		UShapeComponent* RootSphere = nullptr;
+
+	//Distansen den kan følge etter fienden.
+	UPROPERTY(EditAnywhere, Category = "Attack")
+		float AttackDistance = 900.f;
 
 	float Health{ 2.f };
-	bool Faen{ false };
 
-	float HitBackTime{ 0.3f };
+	//'Faen'og 'Angrep' dytter fienden tilbake hvis den har angrepi eller tatt skade.
+	bool Faen{ false };
+	bool Angrep{ false };
+
+	float HitBackTime{ 0.6f };
 	float LastHit{ 0.f };
+
+	float Direction = 1.f;
 
 	UFUNCTION()
 		void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor,

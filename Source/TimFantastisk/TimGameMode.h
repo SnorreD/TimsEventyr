@@ -18,10 +18,11 @@ class TIMFANTASTISK_API ATimGameMode : public AGameModeBase
 public:
 	ATimGameMode();
 
-	void SaveGame();
-	void LoadGame();
+	//Tips brukes sammen med 'HUD' og 'ShowTips' for å vise tips på skjermen.
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		FString Tips = "";
 
-	FString SpawnPlace = "Level1_1";
-	FName Map = "Prototype_Map";
+	//Hvor langt fiendene skal ned før de dør.
+	float KillZ = -900.f;
 	
 };

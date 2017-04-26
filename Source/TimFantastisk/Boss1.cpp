@@ -3,12 +3,11 @@
 #include "TimFantastisk.h"
 #include "Boss1.h"
 #include "Bullet.h"
+#include "TimGameMode.h"
 
 
-// Sets default values
 ABoss1::ABoss1()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	PrimaryActorTick.bCanEverTick = true;
@@ -19,18 +18,17 @@ ABoss1::ABoss1()
 
 }
 
-// Called when the game starts or when spawned
 void ABoss1::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
-// Called every frame
 void ABoss1::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	//Her byttes skyte modus etter en tilfeldig tid.
 	TimeSinceModeChange += DeltaTime;
 	if (TimeSinceModeChange > ModeChangeTime)
 	{
@@ -48,33 +46,43 @@ void ABoss1::Tick(float DeltaTime)
 		ModeChangeTime = FMath::FRandRange(10.f, 20.f);
 	}
 
-	if ((NewDirection.X < ShootDistance && NewDirection.X >(ShootDistance * -1)) && (NewDirection.Y < ShootDistance && NewDirection.Y >(ShootDistance * -1)))
+	//Hvis fienden er nærme nok skyter han mot spilleren med en av to skytemoduser.
+	if (NewDirection.Size() < ShootDistance)
 	{
 		LastShot += DeltaTime;
 		if (LastShot > TimeBetweenShots)
 		{
+			//Skytemodus 1: skyter mange små kuler. Kulene tar lite skade.
 			if (Mode == 1)
 			{
-				GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + GetActorForwardVector() * 120.f, FRotator(GetActorRotation().Pitch, GetActorRotation().Yaw - 25.f, GetActorRotation().Roll));
-				GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + GetActorForwardVector() * 250.f, GetActorRotation());
-				GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + GetActorForwardVector() * 120.f, FRotator(GetActorRotation().Pitch, GetActorRotation().Yaw + 25.f, GetActorRotation().Roll));
+				AActor* Bullet = GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + GetActorForwardVector() * 120.f, FRotator(GetActorRotation().Pitch, GetActorRotation().Yaw - 25.f, GetActorRotation().Roll));
+				Cast<ABullet>(Bullet)->Damage *= 0.5f;
+				Bullet = GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + GetActorForwardVector() * 250.f, GetActorRotation());
+				Cast<ABullet>(Bullet)->Damage *= 0.5f;
+				Bullet = GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + GetActorForwardVector() * 120.f, FRotator(GetActorRotation().Pitch, GetActorRotation().Yaw + 25.f, GetActorRotation().Roll));
+				Cast<ABullet>(Bullet)->Damage *= 0.5f;
 				LastShot = 0.f;
 			}
+			//Skytemodus 2: skyter få store kuler. Kulene tar mer skade.
 			if (Mode == 2)
 			{
 				AActor *Bullet = GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + GetActorForwardVector() * 160.f, GetActorRotation());
 				Bullet->SetActorRelativeScale3D(FVector(3.f, 3.f, 3.f));
+				Cast<ABullet>(Bullet)->Damage *= 2.f;
 				LastShot = 0.f;
 			}
 			
 		}
+
+		//Dreper fienden hvis han har falt utenfor kartet.
+		if (GetActorLocation().Z < Cast<ATimGameMode>(GetWorld()->GetAuthGameMode())->KillZ)
+		{
+			Destroy();
+		}
 	}
 
-	ACharacter* myCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
-
-	FVector EnemyLocation = GetActorLocation();
-	FVector PlayerLocation = myCharacter->GetActorLocation();
-	NewDirection = PlayerLocation - EnemyLocation;
+	//Finner spillerens plassering og roterer etter den.
+	NewDirection = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)->GetActorLocation() - GetActorLocation();
 	NewDirection.Z = 0.f;
 	SetActorRotation(NewDirection.Rotation());
 
@@ -82,14 +90,12 @@ void ABoss1::Tick(float DeltaTime)
 
 void ABoss1::ImHit(float Damage)
 {
+	//Fienden tar skade hvis den er truffet. Er han tom for liv blir han ødelagt.
 	Health = Health - Damage;
 
 	if (Health <= 0.f)
 	{
 		this->Destroy();
 	}
-
-	Damage = 0;
-	//Faen = true;
 }
 

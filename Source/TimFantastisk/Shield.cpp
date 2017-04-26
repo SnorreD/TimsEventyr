@@ -7,10 +7,8 @@
 #include "Tim.h"
 
 
-// Sets default values
 AShield::AShield()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	RootCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("MyShield"));
@@ -21,24 +19,24 @@ AShield::AShield()
 
 }
 
-// Called when the game starts or when spawned
 void AShield::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
-// Called every frame
 void AShield::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	//Skyoldet skal ikke kunne ta evig fort med skade, så det er en nedteller mellom hver gang den kan ta skade.
 	if (Cooldown == true)
 	{
 		CurrentCooldownTime += DeltaTime;
 		if (CurrentCooldownTime > TotalCooldownTime)
 		{
 			Cooldown = false;
+			CurrentCooldownTime = 0.f;
 		}
 	}
 
@@ -49,6 +47,7 @@ void AShield::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherA
 	UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex,
 	bool bFromSweep, const FHitResult &SweepResult)
 {
+	//Hvis en fiende treffer skjoldet tar det skade, hvis en kule treffer det tar det skade og reflekterer kulen tilbake. Skjoldets liv vil også bli sendt til en variabel hos spilleren.
 	if (OtherActor->IsA(AFiende::StaticClass()))
 	{
 		if (Cooldown == false)
@@ -59,19 +58,17 @@ void AShield::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherA
 
 			Cooldown = true;
 		}
-											  //Destroy();
 	}
 
 	else if (OtherActor->IsA(ABullet::StaticClass()))
 	{
 		if (Cast<ABullet>(OtherActor)->EnemyBullet == true)
 		{
-			//OtherActor->SetActorRotation(FRotator(OtherActor->GetActorRotation().Pitch, OtherActor->GetActorRotation().Yaw * +180, OtherActor->GetActorRotation().Roll));
 			Cast<ABullet>(OtherActor)->EnemyBullet = false;
 			if (Cast<ABullet>(OtherActor)->Speed > 0)
 				Cast<ABullet>(OtherActor)->Speed *= -1;
 
-			Health = Health - 1.f;
+			Health -= Cast<ABullet>(OtherActor)->Damage;
 			ACharacter* myCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
 			Cast<ATim>(myCharacter)->ShieldHealth = Health;
 		}
@@ -79,12 +76,8 @@ void AShield::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherA
 
 	if (Health <= 0.f)
 	{
-		DestroyShield();
+		Destroy();
 	}
 
 }
 
-void AShield::DestroyShield()
-{
-	this->Destroy();
-}

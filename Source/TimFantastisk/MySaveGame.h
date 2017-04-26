@@ -14,10 +14,20 @@ class TIMFANTASTISK_API UMySaveGame : public USaveGame
 	GENERATED_BODY()
 	
 public:
-	UMySaveGame();
+	
+	//Level(lagrepunkt) og kart, begge disse skal lagres.
+	UPROPERTY(VisibleAnywhere, Category = Basic)
+		FString Level = "Level1_1";
 
-	UPROPERTY(EditAnywhere)
-		FString Level;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = Basic)
 		FName Map;
+
+
+	UPROPERTY(VisibleAnywhere, Category = Basic)
+		FString SaveSlotName;
+
+	UPROPERTY(VisibleAnywhere, Category = Basic)
+		uint32 UserIndex;
+
+	UMySaveGame();
 };

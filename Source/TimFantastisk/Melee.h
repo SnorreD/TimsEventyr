@@ -22,9 +22,11 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	//Tiden sverdet lever.
 	UPROPERTY(EditAnywhere)
 		float TimeBeforeDestroy = 0.25f;
 
+	//Skaden sverdet gjør.
 	UPROPERTY(EditAnywhere)
 		float Damage = 1.f;
 

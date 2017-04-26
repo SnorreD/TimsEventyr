@@ -11,15 +11,15 @@ class TIMFANTASTISK_API AAvstandFiende : public AActor
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
+
 	AAvstandFiende();
 
 protected:
-	// Called when the game starts or when spawned
+
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
+
 	virtual void Tick(float DeltaTime) override;
 
 	FVector CurrentVelocity;
@@ -31,9 +31,11 @@ public:
 	UPROPERTY(EditAnywhere)
 		UShapeComponent* RootCapsule = nullptr;
 
+	//Avstanden fra spilleren før fienden kan begynne å skyte.
 	UPROPERTY(EditAnywhere, Category = "Movement")
 		float ShootDistance = 600.f;
 
+	//Avstanden fra spilleren før fienden kan begynne å følge etter spilleren.
 	UPROPERTY(EditAnywhere, Category = "Movement")
 		float MoveDistance = 800.f;
 

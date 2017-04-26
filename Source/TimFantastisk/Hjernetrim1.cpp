@@ -8,7 +8,6 @@
 // Sets default values
 AHjernetrim1::AHjernetrim1()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	RootBox = CreateDefaultSubobject<UBoxComponent>(TEXT("MyBox"));
@@ -19,18 +18,17 @@ AHjernetrim1::AHjernetrim1()
 
 }
 
-// Called when the game starts or when spawned
 void AHjernetrim1::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
-// Called every frame
 void AHjernetrim1::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	//Hvis spilleren har fullført gåten blir den ødelagt.
 	if (PlayerActivate == true)
 	{
 		if (Light1 == 3 && Light2 == 1 && Light3 == 2 && Light4 == 4)

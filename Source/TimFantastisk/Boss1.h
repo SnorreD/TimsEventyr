@@ -11,20 +11,21 @@ class TIMFANTASTISK_API ABoss1 : public AActor
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
+
 	ABoss1();
 
 protected:
-	// Called when the game starts or when spawned
+
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
+
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(EditAnywhere)
 		UShapeComponent* RootCapsule = nullptr;
 
+	//Avstanden før fienden kan angrepe.
 	UPROPERTY(EditAnywhere, Category = "Shooting")
 		float ShootDistance = 600.f;
 
@@ -36,6 +37,8 @@ public:
 
 	float Health{ 10.f };
 	FVector NewDirection;
+
+	//Variabler som har med skyte modus å gjøre.
 	int Mode = 1;
 	float ModeChangeTime = FMath::FRandRange(10.f, 20.f);
 	float TimeSinceModeChange = 0.f;

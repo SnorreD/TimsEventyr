@@ -11,28 +11,29 @@ class TIMFANTASTISK_API ABullet : public AActor
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
+
 	ABullet();
 
 protected:
-	// Called when the game starts or when spawned
+
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
+
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(EditAnywhere)
 		float Speed = 700.f;
 
 	UPROPERTY(EditAnywhere)
-		float TimeBeforeDestroy = 500.f;
+		float TimeBeforeDestroy = 20.f;
 
 	UPROPERTY(EditAnywhere)
 		float Damage = 0.5f;
 
 	float TimeLived{ 0.f };
 
+	//Vi holder øye med om det er en fiende eller spilleren som har skutt kulen. Med denne variablen kommer vi unna vennlig skade.
 	UPROPERTY(EditAnywhere)
 		bool EnemyBullet = true;
 
