@@ -31,7 +31,7 @@ void AHjernetrim1::Tick(float DeltaTime)
 	//Hvis spilleren har fullført gåten blir den ødelagt.
 	if (PlayerActivate == true)
 	{
-		if (Light1 == 3 && Light2 == 1 && Light3 == 2 && Light4 == 4)
+		if (Light1 == 4 && Light2 == 5 && Light3 == 3 && Light4 == 1)
 		{
 			PlayerActivate = false;
 			Destroy();
