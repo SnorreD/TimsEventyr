@@ -16,14 +16,14 @@ class TIMFANTASTISK_API UMySaveGame : public USaveGame
 public:
 	
 	//Level(lagrepunkt) og kart, begge disse skal lagres.
-	UPROPERTY(VisibleAnywhere, Category = Basic)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		FString Level = "Level1_1";
 
-	UPROPERTY(VisibleAnywhere, Category = Basic)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		FName Map;
 
 
-	UPROPERTY(VisibleAnywhere, Category = Basic)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		FString SaveSlotName;
 
 	UPROPERTY(VisibleAnywhere, Category = Basic)

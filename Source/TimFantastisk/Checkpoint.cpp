@@ -36,13 +36,14 @@ void ACheckpoint::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *Ot
 {
 	if (OtherActor->IsA(ATim::StaticClass()))
 	{
-		//Her lagres det informasjonen om hvem checkpoint man er i og hvilke kart når spilleren kommer borti.
-		UMySaveGame* LoadGameInstance = Cast<UMySaveGame>(UGameplayStatics::CreateSaveGameObject(UMySaveGame::StaticClass()));
-		LoadGameInstance = Cast<UMySaveGame>(UGameplayStatics::LoadGameFromSlot(LoadGameInstance->SaveSlotName, LoadGameInstance->UserIndex));
-		UMySaveGame* SaveGameInstance = Cast<UMySaveGame>(UGameplayStatics::CreateSaveGameObject(UMySaveGame::StaticClass()));
-		SaveGameInstance->Map = Map;
-		SaveGameInstance->Level = NewCheck;
-		UGameplayStatics::SaveGameToSlot(SaveGameInstance, SaveGameInstance->SaveSlotName, SaveGameInstance->UserIndex);
+		if (Cast<ATim>(OtherActor)->CurrentCheck != NewCheck || GetWorld()->GetMapName() != Map.ToString())
+		{
+			//Her lagres det informasjonen om hvem checkpoint man er i og hvilke kart når spilleren kommer borti.
+			UMySaveGame* SaveGameInstance = Cast<UMySaveGame>(UGameplayStatics::CreateSaveGameObject(UMySaveGame::StaticClass()));
+			SaveGameInstance->Map = Map;
+			SaveGameInstance->Level = NewCheck;
+			UGameplayStatics::SaveGameToSlot(SaveGameInstance, SaveGameInstance->SaveSlotName, SaveGameInstance->UserIndex);
+		}
 
 		Destroy();
 	}

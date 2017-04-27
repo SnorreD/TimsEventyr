@@ -53,7 +53,9 @@ void ATim::BeginPlay()
 
 		if (Controller)
 		{
-			AActor *NewPawn = CurrentGameMode->FindPlayerStart(Controller, /*LoadGameInstance->Level*/ "Level1_1");
+			//AActor *NewPawn = CurrentGameMode->FindPlayerStart(Controller, /*LoadGameInstance->Level*/ "Level1_1");
+			AActor *NewPawn = CurrentGameMode->FindPlayerStart(Controller, LoadGameInstance->Level);
+			CurrentCheck = LoadGameInstance->Level;
 			SetActorLocation(NewPawn->GetActorLocation());
 			Controller->ClientSetRotation(NewPawn->GetActorRotation());
 		}
@@ -233,9 +235,16 @@ void ATim::ImHit(float Damage)
 		if (Shield)
 			Shield->Destroy();
 
-		UMySaveGame* LoadGameInstance = Cast<UMySaveGame>(UGameplayStatics::CreateSaveGameObject(UMySaveGame::StaticClass()));
+		 UMySaveGame* LoadGameInstance = Cast<UMySaveGame>(UGameplayStatics::CreateSaveGameObject(UMySaveGame::StaticClass()));
 		LoadGameInstance = Cast<UMySaveGame>(UGameplayStatics::LoadGameFromSlot(LoadGameInstance->SaveSlotName, LoadGameInstance->UserIndex));
 
+		//Ded = true;
+
+		//APlayerController* const MyPlayer = Cast<APlayerController>(GEngine->GetFirstLocalPlayerController(GetWorld()));
+		//if (MyPlayer != NULL)
+		//{
+		//	MyPlayer->SetPause(true, FCanUnpause(false));
+		//}
 		UGameplayStatics::OpenLevel(this, LoadGameInstance->Map);
 	}
 }

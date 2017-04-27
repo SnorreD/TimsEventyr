@@ -70,6 +70,9 @@ public:
 	UPROPERTY(EditAnywhere)
 		float AngrepMellomrom = 0.5f;
 
+	UPROPERTY(EditAnywhere)
+		FString CurrentCheck;
+
 	float TidSidenAngrep;
 
 	//Skjold variabler.
@@ -85,6 +88,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		int Health = 3;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		bool Ded = false;
 
 	//Puzzle variablen brukes for å peke på en gåte spilleren er på.
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
