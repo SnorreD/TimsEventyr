@@ -38,11 +38,11 @@ public:
 
 	//Lys og dems farge verdi. 1 = Rød, 2 = Oransje, 3 = Lilla og 4 = Blå.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Light, meta = (AllowPrivateAccess = "true"))
-		int Light1 = 1;
+		int Light1 = 6;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Light, meta = (AllowPrivateAccess = "true"))
-		int Light2 = 1;
+		int Light2 = 4;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Light, meta = (AllowPrivateAccess = "true"))
-		int Light3 = 1;
+		int Light3 = 3;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Light, meta = (AllowPrivateAccess = "true"))
-		int Light4 = 1;
+		int Light4 = 5;
 };
