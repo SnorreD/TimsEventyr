@@ -49,16 +49,8 @@ void AHjernetrim1::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *O
 		if (PlayerActivate == false)
 		{
 			PlayerActivate = true;
-			GetWorld()->GetFirstPlayerController()->bShowMouseCursor = true;
-			GetWorld()->GetFirstPlayerController()->bEnableClickEvents = true;
-			GetWorld()->GetFirstPlayerController()->bEnableMouseOverEvents = true;
-			//GetWorld()->GetFirstPlayerController()->bEnableTouchEvents = true;
 			Cast<ATim>(OtherActor)->Puzzle = this;
 		}
-		//GetWorld()->GetFirstPlayerController()->bShowMouseCursor = false;
-		//GetWorld()->GetFirstPlayerController()->bEnableClickEvents = false;
-		//GetWorld()->GetFirstPlayerController()->bEnableMouseOverEvents = false;
-		//GetWorld()->GetFirstPlayerController()->bEnableTouchEvents = true;
 		
 	}
 }
@@ -68,10 +60,6 @@ void AHjernetrim1::EndOverlap(UPrimitiveComponent* OverlappedComp, AActor* Other
 	if (OtherActor->IsA(ATim::StaticClass()))
 	{
 		PlayerActivate = false;
-		GetWorld()->GetFirstPlayerController()->bShowMouseCursor = false;
-		GetWorld()->GetFirstPlayerController()->bEnableClickEvents = false;
-		GetWorld()->GetFirstPlayerController()->bEnableMouseOverEvents = false;
-		GetWorld()->GetFirstPlayerController()->bEnableTouchEvents = true;
 		Cast<ATim>(OtherActor)->Puzzle = NULL;
 	}
 }

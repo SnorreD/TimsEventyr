@@ -31,11 +31,16 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Shooting")
 		TSubclassOf<class ABullet> BulletBlueprint;
+
+	UPROPERTY(EditAnywhere, Category = "Shooting")
+		TSubclassOf<class AFiende> FiendeBlueprint;
 	
 	float LastShot{ 0.f };
-	float TimeBetweenShots{ 0.1f };
+	float TimeBetweenShots{ 0.2f };
 
-	float Health{ 10.f };
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		float Health = 20.f;
+
 	FVector NewDirection;
 
 	//Variabler som har med skyte modus å gjøre.

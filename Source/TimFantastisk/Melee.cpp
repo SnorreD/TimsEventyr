@@ -5,6 +5,7 @@
 #include "Fiende.h"
 #include "AvstandFiende.h"
 #include "Bullet.h"
+#include "Boss1.h"
 
 
 // Sets default values
@@ -44,16 +45,25 @@ void AMelee::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherAc
 	UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex,
 	bool bFromSweep, const FHitResult &SweepResult)
 {
-	//Hvis sverdet treffer en fiende tar fienden skade.
-	if (OtherActor->IsA(AFiende::StaticClass()))
+	if (!HaveHit)
 	{
-		Cast<AFiende>(OtherActor)->ImHit(Damage);
+		//Hvis sverdet treffer en fiende tar fienden skade.
+		if (OtherActor->IsA(AFiende::StaticClass()))
+		{
+			Cast<AFiende>(OtherActor)->ImHit(Damage);
+			HaveHit = true;
+		}
+		else if (OtherActor->IsA(AAvstandFiende::StaticClass()))
+		{
+			Cast<AAvstandFiende>(OtherActor)->ImHit(Damage);
+			HaveHit = true;
+		}
+		else if (OtherActor->IsA(ABoss1::StaticClass()))
+		{
+			Cast<ABoss1>(OtherActor)->ImHit(Damage);
+			HaveHit = true;
+		}
 	}
-	if (OtherActor->IsA(AAvstandFiende::StaticClass()))
-	{
-		Cast<AAvstandFiende>(OtherActor)->ImHit(Damage);
-	}
-
 	//Hvis sverdet treffer en kule ødeleges kulen.
 	if (OtherActor->IsA(ABullet::StaticClass()))
 	{

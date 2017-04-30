@@ -43,7 +43,7 @@ public:
 		bool CloseRangeEnemy = true; //Sann for nærkamp fiende og falsk for avstand fiende.
 
 	UPROPERTY(EditAnywhere, Category = "Spawning")
-		TSubclassOf<class AFiende> FiendeBlueprint2;
+		TSubclassOf<class AFiende> FiendeBlueprint;
 
 	UPROPERTY(EditAnywhere, Category = "Spawning")
 		TSubclassOf<class AAvstandFiende> AvstandFiendeBlueprint;

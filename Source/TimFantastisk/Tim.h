@@ -83,7 +83,12 @@ public:
 	float ShieldDestroyed = 0.f;
 	bool ShieldDestruction = false;
 	AActor *Shield;
+	AActor *Sword;
 	bool ShieldOut{ false };
+
+	bool DamageTaken{ false };
+	float DamageInv{ 0.3f };
+	float TimeSinceDam = 0.f;
 
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
@@ -95,4 +100,8 @@ public:
 	//Puzzle variablen brukes for å peke på en gåte spilleren er på.
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		AActor* Puzzle;
+
+	//Boss variablen brukes for å peke på en boss spilleren er på.
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		AActor* Boss;
 };

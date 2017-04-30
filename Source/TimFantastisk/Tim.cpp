@@ -122,6 +122,16 @@ void ATim::Tick(float DeltaTime)
 		}
 	}
 
+	if (DamageTaken == true)
+	{
+		TimeSinceDam += DeltaTime;
+		if (TimeSinceDam > DamageInv)
+		{
+			DamageTaken = false;
+			TimeSinceDam = 0.f;
+		}
+	}
+
 }
 
 void ATim::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -173,7 +183,7 @@ void ATim::AttackMelee()
 			Shield->Destroy();
 			ShieldOut = false;
 		}
-		AActor *Sword = GetWorld()->SpawnActor<AMelee>(MeleeBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, FRotator(90.f, GetActorRotation().Yaw, GetActorRotation().Roll));
+		Sword = GetWorld()->SpawnActor<AMelee>(MeleeBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, FRotator(90.f, GetActorRotation().Yaw, GetActorRotation().Roll));
 		Sword->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform, NAME_None);
 
 		Skytesperre = true;
@@ -229,22 +239,24 @@ void ATim::ShieldOff()
 //Hvis spilleren går tom for liv lades kartet på nytt og alt går tilbake.
 void ATim::ImHit(float Damage)
 {
-	Health -= Damage;
+	if (!DamageTaken)
+	{
+		Health -= Damage;
+
+		DamageTaken = true;
+	}
+
 	if (Health <= 0)
 	{
 		if (Shield)
 			Shield->Destroy();
+		if (Sword)
+			Sword->Destroy();
 
-		 UMySaveGame* LoadGameInstance = Cast<UMySaveGame>(UGameplayStatics::CreateSaveGameObject(UMySaveGame::StaticClass()));
+		UMySaveGame* LoadGameInstance = Cast<UMySaveGame>(UGameplayStatics::CreateSaveGameObject(UMySaveGame::StaticClass()));
 		LoadGameInstance = Cast<UMySaveGame>(UGameplayStatics::LoadGameFromSlot(LoadGameInstance->SaveSlotName, LoadGameInstance->UserIndex));
 
-		//Ded = true;
-
-		//APlayerController* const MyPlayer = Cast<APlayerController>(GEngine->GetFirstLocalPlayerController(GetWorld()));
-		//if (MyPlayer != NULL)
-		//{
-		//	MyPlayer->SetPause(true, FCanUnpause(false));
-		//}
 		UGameplayStatics::OpenLevel(this, LoadGameInstance->Map);
 	}
+	
 }

@@ -4,6 +4,7 @@
 #include "Boss1.h"
 #include "Bullet.h"
 #include "TimGameMode.h"
+#include "Fiende.h"
 
 
 ABoss1::ABoss1()
@@ -39,11 +40,25 @@ void ABoss1::Tick(float DeltaTime)
 		}
 		else if (Mode == 2)
 		{
+			Mode = 3;
+			TimeBetweenShots = 0.1f;
+		}
+		else if (Mode == 3)
+		{
+			Mode = 4;
+			TimeBetweenShots = 1.2f;
+		}
+		else if (Mode == 4)
+			Mode = 5;
+
+		else if (Mode == 5)
+		{
 			Mode = 1;
 			TimeBetweenShots = 0.2f;
 		}
+
 		TimeSinceModeChange = 0.f;
-		ModeChangeTime = FMath::FRandRange(10.f, 20.f);
+		ModeChangeTime = FMath::FRandRange(5.f, 10.f);
 	}
 
 	//Hvis fienden er nærme nok skyter han mot spilleren med en av to skytemoduser.
@@ -56,19 +71,38 @@ void ABoss1::Tick(float DeltaTime)
 			if (Mode == 1)
 			{
 				AActor* Bullet = GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + GetActorForwardVector() * 120.f, FRotator(GetActorRotation().Pitch, GetActorRotation().Yaw - 25.f, GetActorRotation().Roll));
-				Cast<ABullet>(Bullet)->Damage *= 0.5f;
-				Bullet = GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + GetActorForwardVector() * 250.f, GetActorRotation());
-				Cast<ABullet>(Bullet)->Damage *= 0.5f;
+				Bullet = GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + GetActorForwardVector() * 120.f, GetActorRotation());
 				Bullet = GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + GetActorForwardVector() * 120.f, FRotator(GetActorRotation().Pitch, GetActorRotation().Yaw + 25.f, GetActorRotation().Roll));
-				Cast<ABullet>(Bullet)->Damage *= 0.5f;
+
 				LastShot = 0.f;
 			}
 			//Skytemodus 2: skyter få store kuler. Kulene tar mer skade.
-			if (Mode == 2)
+			else if (Mode == 2)
 			{
 				AActor *Bullet = GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + GetActorForwardVector() * 160.f, GetActorRotation());
-				Bullet->SetActorRelativeScale3D(FVector(3.f, 3.f, 3.f));
-				Cast<ABullet>(Bullet)->Damage *= 2.f;
+				if (Bullet)
+				{
+					Bullet->SetActorRelativeScale3D(FVector(3.f, 3.f, 3.f));
+					Cast<ABullet>(Bullet)->Damage *= 2.f;
+				}
+
+				LastShot = 0.f;
+			}
+			//Skytemodus 3: skyter mellom store kuler i tilfeldig retning. Kulene gjør normalt med skade.
+			else if (Mode == 3)
+			{
+				AActor *Bullet = GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation(), FRotator(GetActorRotation().Pitch, GetActorRotation().Yaw + FMath::FRandRange(-50.f, 50.f), GetActorRotation().Roll));
+				if (Bullet)
+					Bullet->SetActorRelativeScale3D(FVector(1.7f, 1.7f, 1.7f));
+
+				LastShot = 0.f;
+			}
+			else if (Mode == 4)
+			{
+				AActor *Fiende = GetWorld()->SpawnActor<AFiende>(FiendeBlueprint, GetActorLocation() + GetActorForwardVector() * 180.f, FRotator(90.f, 0.f, 0.f));
+				if (Fiende)
+					Cast<AFiende>(Fiende)->AttackDistance = ShootDistance;
+
 				LastShot = 0.f;
 			}
 			

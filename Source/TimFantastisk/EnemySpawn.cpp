@@ -44,7 +44,7 @@ void AEnemySpawn::Tick(float DeltaTime)
 		{
 			if (CloseRangeEnemy == true)
 			{
-				GetWorld()->SpawnActor<AFiende>(FiendeBlueprint2, GetActorLocation(), FRotator(90.f, 0.f, 0.f));
+				GetWorld()->SpawnActor<AFiende>(FiendeBlueprint, GetActorLocation(), FRotator(90.f, 0.f, 0.f));
 				LastSpawn = 0.f;
 				++AmountSpawned;
 			}

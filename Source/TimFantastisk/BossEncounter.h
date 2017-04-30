@@ -3,16 +3,16 @@
 #pragma once
 
 #include "GameFramework/Actor.h"
-#include "Melee.generated.h"
+#include "BossEncounter.generated.h"
 
 UCLASS()
-class TIMFANTASTISK_API AMelee : public AActor
+class TIMFANTASTISK_API ABossEncounter : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AMelee();
+	ABossEncounter();
 
 protected:
 	// Called when the game starts or when spawned
@@ -22,28 +22,14 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	//Tiden sverdet lever.
 	UPROPERTY(EditAnywhere)
-		float TimeBeforeDestroy = 0.25f;
-
-	//Skaden sverdet gjør.
-	UPROPERTY(EditAnywhere)
-		float Damage = 1.f;
-
-	float TimeLived{ 0 };
-
-	//Sjekker om sverdet har att skade av en fiende. Hvis det har skal det ikke ta mer skade.
-	bool HaveHit{ false };
-
-	UPROPERTY(EditAnywhere)
-		UShapeComponent* RootCapsule = nullptr;
+		UShapeComponent* RootBox = nullptr;
 
 	UFUNCTION()
 		void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor,
 			UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex,
 			bool bFromSweep, const FHitResult &SweepResult);
 
-
-	
+	AActor* Boss;
 	
 };

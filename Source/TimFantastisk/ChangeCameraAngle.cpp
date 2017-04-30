@@ -41,8 +41,8 @@ void AChangeCameraAngle::OnOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 		USpringArmComponent *Camera = Cast<ATim>(OtherActor)->CameraBoom;
 		Camera->TargetArmLength = ArmLenght;
 		Camera->RelativeRotation = CameraRotation;
-	}
-	Destroy();
 
+		Destroy();
+	}
 }
 

@@ -72,14 +72,11 @@ void AFiende::Tick(float DeltaTime)
 //Hvis den er skadet og ikke har blitt skadet i nær tid, tar den skade og hopper bakover.
 void AFiende::ImHit(float Damage)
 {
-	if (Faen == false)
-	{
-		Health = Health - Damage;
+	Health = Health - Damage;
 
-		if (Health <= 0.f)
-		{
+	if (Health <= 0.f)
+	{
 			this->Destroy();
-		}
 	}
 
 	Faen = true;
