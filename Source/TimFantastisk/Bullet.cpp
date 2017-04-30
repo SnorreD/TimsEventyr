@@ -57,7 +57,7 @@ void ABullet::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherA
 
 	else if (OtherActor->IsA(ATim::StaticClass()) && EnemyBullet == true)
 	{
-		Cast<ATim>(OtherActor)->ImHit(Damage* 2);
+		Cast<ATim>(OtherActor)->ImHit(Damage * 2);
 		Destroy();
 	}
 
@@ -71,5 +71,7 @@ void ABullet::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherA
 		Cast<ABoss1>(OtherActor)->ImHit(Damage);
 		Destroy();
 	}
+	else if (OtherComponent->ComponentHasTag("Block"))
+		Destroy();
 }
 

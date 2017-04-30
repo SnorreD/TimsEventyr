@@ -116,7 +116,7 @@ void ATim::Tick(float DeltaTime)
 		ShieldHealth = ShieldDestroyed * 0.5f;
 		if (ShieldDestroyed > ShieldTimer)
 		{
-			ShieldHealth = 10.f;
+			ShieldHealth = 5.f;
 			ShieldDestroyed = 0.f;
 			ShieldDestruction = false;
 		}

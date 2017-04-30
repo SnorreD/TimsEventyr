@@ -26,7 +26,7 @@ public:
 		float Speed = 700.f;
 
 	UPROPERTY(EditAnywhere)
-		float TimeBeforeDestroy = 20.f;
+		float TimeBeforeDestroy = 3.f;
 
 	UPROPERTY(EditAnywhere)
 		float Damage = 0.5f;

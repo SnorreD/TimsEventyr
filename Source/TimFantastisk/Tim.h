@@ -77,9 +77,9 @@ public:
 
 	//Skjold variabler.
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-		float ShieldHealth = 10.f;
+		float ShieldHealth = 5.f;
 
-	float ShieldTimer{ 20.f };
+	float ShieldTimer{ 10.f };
 	float ShieldDestroyed = 0.f;
 	bool ShieldDestruction = false;
 	AActor *Shield;

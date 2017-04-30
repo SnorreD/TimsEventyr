@@ -36,7 +36,7 @@ public:
 			UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex,
 			bool bFromSweep, const FHitResult &SweepResult);
 
-	float Health = 10.f;
+	float Health = 5.f;
 
 	bool Cooldown = false;
 
