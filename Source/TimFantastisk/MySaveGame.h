@@ -28,5 +28,8 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = Basic)
 		uint32 UserIndex;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		int Power = 1;
+
 	UMySaveGame();
 };

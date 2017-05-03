@@ -53,14 +53,14 @@ void ATim::BeginPlay()
 
 		if (Controller)
 		{
-			//AActor *NewPawn = CurrentGameMode->FindPlayerStart(Controller, /*LoadGameInstance->Level*/ "Level1_1");
 			AActor *NewPawn = CurrentGameMode->FindPlayerStart(Controller, LoadGameInstance->Level);
 			CurrentCheck = LoadGameInstance->Level;
 			SetActorLocation(NewPawn->GetActorLocation());
 			Controller->ClientSetRotation(NewPawn->GetActorRotation());
+			Level = LoadGameInstance->Power;
 		}
+
 	}
-	
 
 }
 
@@ -132,6 +132,19 @@ void ATim::Tick(float DeltaTime)
 		}
 	}
 
+	if (Charge == true)
+	{
+		if (ChargeBullet)
+		{
+
+			Cast<ABullet>(ChargeBullet)->Damage += DeltaTime;
+			ChargeBullet->SetActorRelativeScale3D(FVector(Cast<ABullet>(ChargeBullet)->Damage, Cast<ABullet>(ChargeBullet)->Damage, Cast<ABullet>(ChargeBullet)->Damage));
+			if (Cast<ABullet>(ChargeBullet)->Damage >= 3.f)
+				Charge = false;
+
+		}
+	}
+
 }
 
 void ATim::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -145,6 +158,7 @@ void ATim::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 	InputComponent->BindAction("AttackMelee", IE_Pressed, this, &ATim::AttackMelee);
 	InputComponent->BindAction("AttackShoot", IE_Pressed, this, &ATim::AttackShoot);
+	InputComponent->BindAction("AttackShoot", IE_Released, this, &ATim::AttackShootCharge);
 	InputComponent->BindAction("Shield", IE_Pressed, this, &ATim::ShieldOn);
 	InputComponent->BindAction("Shield", IE_Released, this, &ATim::ShieldOff);
 
@@ -183,7 +197,7 @@ void ATim::AttackMelee()
 			Shield->Destroy();
 			ShieldOut = false;
 		}
-		Sword = GetWorld()->SpawnActor<AMelee>(MeleeBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, FRotator(90.f, GetActorRotation().Yaw, GetActorRotation().Roll));
+		AActor *Sword = GetWorld()->SpawnActor<AMelee>(MeleeBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, FRotator(90.f, GetActorRotation().Yaw, GetActorRotation().Roll));
 		Sword->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform, NAME_None);
 
 		Skytesperre = true;
@@ -201,19 +215,45 @@ void ATim::AttackShoot()
 			Shield->Destroy();
 			ShieldOut = false;
 		}
-		AActor *Bullet = GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
-		if (Bullet)
-			Cast<ABullet>(Bullet)->EnemyBullet = false;
+		if (Level == 1)
+		{
+			AActor *Bullet = GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
+			if (Bullet)
+				Cast<ABullet>(Bullet)->EnemyBullet = false;
 
-		Skytesperre = true;
+			Skytesperre = true;
+		}
+		else if (Level == 2 && !ChargeBullet)
+		{
+			ChargeBullet = GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
+			ChargeBullet->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform, NAME_None);
+			Cast<ABullet>(ChargeBullet)->Speed = 0.f;
+			Cast<ABullet>(ChargeBullet)->TimeBeforeDestroy = 100.f;
+			Cast<ABullet>(ChargeBullet)->EnemyBullet = false;
+			Charge = true;
+			Skytesperre = true;
+		}
 	}
 
+}
+
+void ATim::AttackShootCharge()
+{
+	if (ChargeBullet)
+	{
+		ChargeBullet->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+		Cast<ABullet>(ChargeBullet)->Speed = 700.f;
+		Cast<ABullet>(ChargeBullet)->TimeLived = 0.f;
+		Cast<ABullet>(ChargeBullet)->TimeBeforeDestroy = 3.f;
+		ChargeBullet = nullptr;
+		Charge = false;
+	}
 }
 
 void ATim::ShieldOn()
 {
 	//Spilleren kan få frem et skjold som bokker skade for en viss mengde liv før det må regenereres.
-	if (ShieldDestruction == false)
+	if (ShieldDestruction == false && Charge == false)
 	{
 		Shield = GetWorld()->SpawnActor<AShield>(ShieldBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
 		Shield->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform, NAME_None);
@@ -250,8 +290,6 @@ void ATim::ImHit(float Damage)
 	{
 		if (Shield)
 			Shield->Destroy();
-		if (Sword)
-			Sword->Destroy();
 
 		UMySaveGame* LoadGameInstance = Cast<UMySaveGame>(UGameplayStatics::CreateSaveGameObject(UMySaveGame::StaticClass()));
 		LoadGameInstance = Cast<UMySaveGame>(UGameplayStatics::LoadGameFromSlot(LoadGameInstance->SaveSlotName, LoadGameInstance->UserIndex));

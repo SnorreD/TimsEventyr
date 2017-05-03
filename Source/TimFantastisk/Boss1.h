@@ -34,6 +34,14 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Shooting")
 		TSubclassOf<class AFiende> FiendeBlueprint;
+
+	UPROPERTY(EditAnywhere, Category = "Dead")
+		TSubclassOf<class ALevelUp> PowerDrop;
+
+	UPROPERTY(EditAnywhere, Category = "Dead")
+		int PowerDropLevel = 0;
+	UPROPERTY(EditAnywhere, Category = "Dead")
+		FString PowerDropInfo = "";
 	
 	float LastShot{ 0.f };
 	float TimeBetweenShots{ 0.2f };

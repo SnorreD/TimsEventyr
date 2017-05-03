@@ -32,6 +32,7 @@ public:
 	void Jump();
 	void AttackMelee();
 	void AttackShoot();
+	void AttackShootCharge();
 	void ShieldOn();
 	void ShieldOff();
 	void ImHit(float Damage);
@@ -83,12 +84,16 @@ public:
 	float ShieldDestroyed = 0.f;
 	bool ShieldDestruction = false;
 	AActor *Shield;
-	AActor *Sword;
+	AActor *ChargeBullet;
+	bool Charge{ false };
 	bool ShieldOut{ false };
 
 	bool DamageTaken{ false };
 	float DamageInv{ 0.3f };
 	float TimeSinceDam = 0.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera, meta = (AllowPrivateAccess = "true"))
+		int Level;
 
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))

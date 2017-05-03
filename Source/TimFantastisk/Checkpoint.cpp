@@ -42,6 +42,7 @@ void ACheckpoint::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *Ot
 			UMySaveGame* SaveGameInstance = Cast<UMySaveGame>(UGameplayStatics::CreateSaveGameObject(UMySaveGame::StaticClass()));
 			SaveGameInstance->Map = Map;
 			SaveGameInstance->Level = NewCheck;
+			SaveGameInstance->Power = Cast<ATim>(OtherActor)->Level;
 			UGameplayStatics::SaveGameToSlot(SaveGameInstance, SaveGameInstance->SaveSlotName, SaveGameInstance->UserIndex);
 		}
 

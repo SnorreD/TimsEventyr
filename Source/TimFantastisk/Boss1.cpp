@@ -5,6 +5,7 @@
 #include "Bullet.h"
 #include "TimGameMode.h"
 #include "Fiende.h"
+#include "LevelUp.h"
 
 
 ABoss1::ABoss1()
@@ -111,7 +112,7 @@ void ABoss1::Tick(float DeltaTime)
 		//Dreper fienden hvis han har falt utenfor kartet.
 		if (GetActorLocation().Z < Cast<ATimGameMode>(GetWorld()->GetAuthGameMode())->KillZ)
 		{
-			Destroy();
+			ABoss1::ImHit(50.f);
 		}
 	}
 
@@ -129,6 +130,13 @@ void ABoss1::ImHit(float Damage)
 
 	if (Health <= 0.f)
 	{
+		if (PowerDropLevel > 0)
+		{
+			AActor *Power = GetWorld()->SpawnActor<ALevelUp>(PowerDrop, GetActorLocation(), GetActorRotation());
+			Cast<ALevelUp>(Power)->Level = PowerDropLevel;
+			Cast<ALevelUp>(Power)->Info = PowerDropInfo;
+		}
+		
 		this->Destroy();
 	}
 }

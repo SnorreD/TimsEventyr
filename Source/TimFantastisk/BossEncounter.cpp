@@ -45,7 +45,7 @@ void ABossEncounter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor 
 
 	if (OtherActor->IsA(ATim::StaticClass()))
 	{
-		if (Cast<ABoss1>(Boss)->Health > 0.f)
+		if (Boss)
 			Cast<ATim>(OtherActor)->Boss = Boss;
 	}
 }
