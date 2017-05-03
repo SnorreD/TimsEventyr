@@ -7,6 +7,7 @@
 #include "Shield.h"
 #include "TimGameMode.h"
 #include "MySaveGame.h"
+#include "Rope.h"
 
 
 ATim::ATim()
@@ -31,11 +32,11 @@ ATim::ATim()
 	//Setter opp muse sikte.
 	CursorToWorld = CreateDefaultSubobject<UDecalComponent>("CursorToWorld");
 	CursorToWorld->SetupAttachment(RootComponent);
-	static ConstructorHelpers::FObjectFinder<UMaterial> DecalMaterialAsset(TEXT("Game/Assets/M_Cursor_Decal"));
-	if (DecalMaterialAsset.Succeeded())
-	{
-		CursorToWorld->SetDecalMaterial(DecalMaterialAsset.Object);
-	}
+	//static ConstructorHelpers::FObjectFinder<UMaterial> DecalMaterialAsset(TEXT("Game/Assets/M_Cursor_Decal"));
+	//if (DecalMaterialAsset.Succeeded())
+	//{
+	//	CursorToWorld->SetDecalMaterial(DecalMaterialAsset.Object);
+	//}
 	CursorToWorld->DecalSize = FVector(16.0f, 32.0f, 32.0f);
 	CursorToWorld->SetRelativeRotation(FRotator(90.0f, 0.0f, 0.0f).Quaternion());
 }
@@ -170,20 +171,30 @@ void ATim::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void ATim::MoveX(float AxisValue)
 {
 	//Går fremover.
-	AddMovementInput(FVector(1.f, 0.f, 0.f), AxisValue);
+	if (Climbing != true)
+		AddMovementInput(FVector(1.f, 0.f, 0.f), AxisValue);
+	else if (Climbing == true && AxisValue > 0)
+		Cast<ARope>(Rope)->Velocity = 200.f;
+	else if (Climbing == true && AxisValue < 0)
+		Cast<ARope>(Rope)->Velocity = -200.f;
+	else if (Climbing == true && AxisValue == 0)
+		Cast<ARope>(Rope)->Velocity = 0.f;
 
 }
 
 void ATim::MoveY(float AxisValue)
 {
 	//Går sidelengs.
-	AddMovementInput(FVector(0.f, 1.f, 0.f), AxisValue);
+	if (Climbing != true)
+		AddMovementInput(FVector(0.f, 1.f, 0.f), AxisValue);
 
 }
 
 void ATim::Jump()
 {
 	//Hopp
+	if (Climbing == true)
+		Climbing = false;
 	ACharacter::Jump();
 }
 

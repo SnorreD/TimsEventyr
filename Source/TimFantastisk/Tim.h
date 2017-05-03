@@ -88,6 +88,9 @@ public:
 	bool Charge{ false };
 	bool ShieldOut{ false };
 
+	AActor *Rope = nullptr;
+	bool Climbing{ false };
+
 	bool DamageTaken{ false };
 	float DamageInv{ 0.3f };
 	float TimeSinceDam = 0.f;
