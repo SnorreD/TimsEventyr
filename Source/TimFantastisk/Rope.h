@@ -22,23 +22,20 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void CreateElevator(AActor* OtherActor);
-
 	UPROPERTY(EditAnywhere)
 		UShapeComponent* RootBox = nullptr;
 
 	UPROPERTY(EditAnywhere)
 		UShapeComponent* LiftBox = nullptr;
 
+
 	UFUNCTION()
 		void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor,
 			UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex,
 			bool bFromSweep, const FHitResult &SweepResult);
 
-	UFUNCTION()
-		void EndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	float Velocity{ 0.f };
 
-		float Velocity{ 0.f };
 
 	UPROPERTY(EditAnywhere, Category = "Movement")
 		float MaxHeight;

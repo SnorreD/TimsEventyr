@@ -14,7 +14,6 @@ ARope::ARope()
 	RootComponent = RootBox;
 	RootBox->bGenerateOverlapEvents = true;
 	RootBox->OnComponentBeginOverlap.AddDynamic(this, &ARope::OnOverlap);
-	RootBox->OnComponentEndOverlap.AddDynamic(this, &ARope::EndOverlap);
 
 	LiftBox = CreateDefaultSubobject<UBoxComponent>(TEXT("Elevator"));
 	LiftBox->SetRelativeScale3D(FVector(2.f, 2.f, 0.02f));
@@ -38,7 +37,6 @@ void ARope::Tick(float DeltaTime)
 	{
 		FVector NewLocation = LiftBox->GetComponentLocation() + FVector(0.f, 0.f, 1.f)*(Velocity * DeltaTime);
 		LiftBox->SetWorldLocation(NewLocation);
-		//SetActorLocation(NewLocation);
 	}
 }
 
@@ -50,16 +48,6 @@ void ARope::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherAct
 	{
 		Cast<ATim>(OtherActor)->Rope = this;
 		Cast<ATim>(OtherActor)->Climbing = true;
-		ARope::CreateElevator(OtherActor);
+		LiftBox->SetWorldLocation(OtherActor->GetActorLocation() - FVector(0.f, 0.f, 100.f));
 	}
-}
-
-void ARope::EndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-
-}
-
-void ARope::CreateElevator(AActor* OtherActor)
-{
-	LiftBox->SetWorldLocation(OtherActor->GetActorLocation() - FVector(0.f, 0.f, 100.f));
 }

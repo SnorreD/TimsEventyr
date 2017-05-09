@@ -187,7 +187,6 @@ void ATim::MoveY(float AxisValue)
 	//Går sidelengs.
 	if (Climbing != true)
 		AddMovementInput(FVector(0.f, 1.f, 0.f), AxisValue);
-
 }
 
 void ATim::Jump()
@@ -195,7 +194,18 @@ void ATim::Jump()
 	//Hopp
 	if (Climbing == true)
 		Climbing = false;
-	ACharacter::Jump();
+
+	if (CanJump())
+	{
+		ACharacter::Jump();
+		if (DoubleJump)
+			DoubleJump = false;
+	}
+	else if (!CanJump() && !DoubleJump)
+	{
+		LaunchCharacter(FVector(0.f, 0.f, 350.f), bool(false), bool(true));
+		DoubleJump = true;
+	}
 }
 
 void ATim::AttackMelee()
@@ -237,12 +247,16 @@ void ATim::AttackShoot()
 		else if (Level == 2 && !ChargeBullet)
 		{
 			ChargeBullet = GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
-			ChargeBullet->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform, NAME_None);
-			Cast<ABullet>(ChargeBullet)->Speed = 0.f;
-			Cast<ABullet>(ChargeBullet)->TimeBeforeDestroy = 100.f;
-			Cast<ABullet>(ChargeBullet)->EnemyBullet = false;
-			Charge = true;
-			Skytesperre = true;
+			if (ChargeBullet)
+			{
+				ChargeBullet->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform, NAME_None);
+				Cast<ABullet>(ChargeBullet)->Speed = 0.f;
+				Cast<ABullet>(ChargeBullet)->TimeBeforeDestroy = 100.f;
+				Cast<ABullet>(ChargeBullet)->EnemyBullet = false;
+				Charge = true;
+				Skytesperre = true;
+			}
+			
 		}
 	}
 

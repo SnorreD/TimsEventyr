@@ -16,6 +16,7 @@ AChangeCameraAngle::AChangeCameraAngle()
 	RootComponent = RootCapsule;
 	RootCapsule->bGenerateOverlapEvents = true;
 	RootCapsule->OnComponentBeginOverlap.AddDynamic(this, &AChangeCameraAngle::OnOverlap);
+	RootCapsule->OnComponentEndOverlap.AddDynamic(this, &AChangeCameraAngle::EndOverlap);
 
 }
 
@@ -39,10 +40,24 @@ void AChangeCameraAngle::OnOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 	if (OtherActor->IsA(ATim::StaticClass()))
 	{
 		USpringArmComponent *Camera = Cast<ATim>(OtherActor)->CameraBoom;
-		Camera->TargetArmLength = ArmLenght;
-		Camera->RelativeRotation = CameraRotation;
+		Camera->TargetArmLength = ArmLenght_In;
+		Camera->RelativeRotation = CameraRotation_In;
 
-		Destroy();
+		if (WhileIn == false)
+			Destroy();
+	}
+}
+
+void AChangeCameraAngle::EndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if (WhileIn == true)
+	{
+		if (OtherActor->IsA(ATim::StaticClass()))
+		{
+			USpringArmComponent *Camera = Cast<ATim>(OtherActor)->CameraBoom;
+			Camera->TargetArmLength = ArmLenght_Out;
+			Camera->RelativeRotation = CameraRotation_Out;
+		}
 	}
 }
 

@@ -30,10 +30,22 @@ public:
 			UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex,
 			bool bFromSweep, const FHitResult &SweepResult);
 
-	UPROPERTY(EditAnywhere, Category = "Camera")
-		float ArmLenght = 1000.f;
+	UFUNCTION()
+		void EndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 	UPROPERTY(EditAnywhere, Category = "Camera")
-		FRotator CameraRotation = FRotator(-60.f, 0.f, 0.f);
+		bool WhileIn = false;
+
+	UPROPERTY(EditAnywhere, Category = "Camera")
+		float ArmLenght_In = 1000.f;
+
+	UPROPERTY(EditAnywhere, Category = "Camera")
+		FRotator CameraRotation_In = FRotator(-60.f, 0.f, 0.f);
+
+	UPROPERTY(EditAnywhere, Category = "Camera")
+		float ArmLenght_Out = 800.f;
+
+	UPROPERTY(EditAnywhere, Category = "Camera")
+		FRotator CameraRotation_Out = FRotator(-60.f, 0.f, 0.f);
 	
 };

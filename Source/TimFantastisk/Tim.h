@@ -95,6 +95,8 @@ public:
 	float DamageInv{ 0.3f };
 	float TimeSinceDam = 0.f;
 
+	bool DoubleJump{ false };
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		int Level;
 
