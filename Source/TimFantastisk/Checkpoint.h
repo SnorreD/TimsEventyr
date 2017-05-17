@@ -37,5 +37,7 @@ public:
 		FString NewCheck = "Level1_1";
 	UPROPERTY(EditAnywhere)
 		FName Map = "Skylevel";
+	UPROPERTY(EditAnywhere)
+		bool Teleport = false;
 	
 };

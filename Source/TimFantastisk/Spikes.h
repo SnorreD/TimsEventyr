@@ -25,6 +25,13 @@ public:
 	UPROPERTY(EditAnywhere)
 		UShapeComponent* RootBox = nullptr;
 
+	UPROPERTY(EditAnywhere)
+		bool Move = false;
+
+	int MovementMode{ 1 };
+	float MovementTime{ 2.f };
+	float TimeSinceModeChange{ 0.f };
+
 	UFUNCTION()
 		void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor,
 			UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex,

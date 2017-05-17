@@ -45,6 +45,8 @@ void ACheckpoint::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *Ot
 			SaveGameInstance->Power = Cast<ATim>(OtherActor)->Level;
 			UGameplayStatics::SaveGameToSlot(SaveGameInstance, SaveGameInstance->SaveSlotName, SaveGameInstance->UserIndex);
 		}
+		if (Teleport)
+			UGameplayStatics::OpenLevel(this, Map);
 
 		Destroy();
 	}

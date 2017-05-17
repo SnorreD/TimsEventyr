@@ -73,7 +73,7 @@ void ATim::Tick(float DeltaTime)
 	FHitResult Hit;
 	bool HitResult = false;
 
-	HitResult = GetWorld()->GetFirstPlayerController()->GetHitResultUnderCursorByChannel(UEngineTypes::ConvertToTraceType(ECC_WorldStatic), true, Hit);
+	HitResult = GetWorld()->GetFirstPlayerController()->GetHitResultUnderCursorByChannel(UEngineTypes::ConvertToTraceType(ECC_WorldDynamic), true, Hit);
 
 	if (HitResult)
 	{
@@ -90,6 +90,12 @@ void ATim::Tick(float DeltaTime)
 		NewDirection.Z = 0.f;
 		NewDirection.Normalize();
 		SetActorRotation(NewDirection.Rotation());
+	}
+	else
+	{
+		GetCharacterMovement()->bOrientRotationToMovement = true;
+		GetCharacterMovement()->RotationRate = FRotator(0.f, 10.f, 0.f);
+
 	}
 
 	//En sperre så spilleren ikke kan angrepe med alt for korte mellomrom.
@@ -138,9 +144,9 @@ void ATim::Tick(float DeltaTime)
 		if (ChargeBullet)
 		{
 
-			Cast<ABullet>(ChargeBullet)->Damage += DeltaTime;
-			ChargeBullet->SetActorRelativeScale3D(FVector(Cast<ABullet>(ChargeBullet)->Damage, Cast<ABullet>(ChargeBullet)->Damage, Cast<ABullet>(ChargeBullet)->Damage));
-			if (Cast<ABullet>(ChargeBullet)->Damage >= 3.f)
+			Cast<ABullet>(ChargeBullet)->Damage += DeltaTime/2;
+			ChargeBullet->SetActorRelativeScale3D(FVector(Cast<ABullet>(ChargeBullet)->Damage*2, Cast<ABullet>(ChargeBullet)->Damage*2, Cast<ABullet>(ChargeBullet)->Damage*2));
+			if (Cast<ABullet>(ChargeBullet)->Damage >= 1.5f)
 				Charge = false;
 
 		}

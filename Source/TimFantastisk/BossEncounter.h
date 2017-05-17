@@ -31,5 +31,6 @@ public:
 			bool bFromSweep, const FHitResult &SweepResult);
 
 	AActor* Boss;
+	bool BossExist = false;
 	
 };

@@ -31,13 +31,24 @@ void AHjernetrim1::Tick(float DeltaTime)
 	//Hvis spilleren har fullført gåten blir den ødelagt.
 	if (PlayerActivate == true)
 	{
-		if (Light1 == 4 && Light2 == 5 && Light3 == 3 && Light4 == 1)
+		if (Light1 == 2 && Light2 == 1 && Light3 == 3 && Light4 == 4)
 		{
-			PlayerActivate = false;
-			Destroy();
+			Finished = true;
 		}
 	}
 
+}
+
+int AHjernetrim1::ChangeLight(int x)
+{
+	if (!Finished)
+	{
+		if (x < 4)
+			x++;
+		else
+			x = 1;
+	}
+	return x;
 }
 
 void AHjernetrim1::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor,

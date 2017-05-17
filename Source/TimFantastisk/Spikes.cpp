@@ -25,6 +25,25 @@ void ASpikes::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (Move)
+	{
+		if (TimeSinceModeChange > MovementTime)
+		{
+			if (MovementMode <= 3)
+				MovementMode++;
+			else
+				MovementMode = 1;
+
+			TimeSinceModeChange = 0.f;
+		}
+
+		TimeSinceModeChange += DeltaTime;
+		if (MovementMode == 1)
+			SetActorLocation(FVector(GetActorLocation().X, GetActorLocation().Y, GetActorLocation().Z - (DeltaTime * 33)));
+		else if (MovementMode == 3)
+			SetActorLocation(FVector(GetActorLocation().X, GetActorLocation().Y, GetActorLocation().Z + (DeltaTime * 33)));
+	}
+
 }
 
 void ASpikes::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor,

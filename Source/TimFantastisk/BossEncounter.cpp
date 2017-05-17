@@ -30,6 +30,9 @@ void ABossEncounter::BeginPlay()
 void ABossEncounter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	if (Boss)
+		if (Cast<ABoss1>(Boss)->Health <= 0)
+			Destroy();
 
 }
 
