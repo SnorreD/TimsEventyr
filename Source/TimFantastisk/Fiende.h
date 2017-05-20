@@ -46,6 +46,8 @@ public:
 
 	float Direction = 1.f;
 
+	void HitBack(float DeltaTime);
+
 	UFUNCTION()
 		void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor,
 			UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex,

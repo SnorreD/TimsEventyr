@@ -6,6 +6,7 @@
 #include "Tim.h"
 #include "AvstandFiende.h"
 #include "Boss1.h"
+#include "Hjernetrim2Fiende.h"
 
 
 ABullet::ABullet()
@@ -69,6 +70,11 @@ void ABullet::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherA
 	else if (OtherActor->IsA(ABoss1::StaticClass()) && EnemyBullet == false)
 	{
 		Cast<ABoss1>(OtherActor)->ImHit(Damage);
+		Destroy();
+	}
+	else if (OtherActor->IsA(AHjernetrim2Fiende::StaticClass()) && EnemyBullet == false)
+	{
+		Cast<AHjernetrim2Fiende>(OtherActor)->ImHit(Damage);
 		Destroy();
 	}
 	else if (OtherComponent->ComponentHasTag("Block"))

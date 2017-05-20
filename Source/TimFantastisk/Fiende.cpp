@@ -31,34 +31,19 @@ void AFiende::Tick(float DeltaTime)
 	//Hvis ja hopper den opp og går bakover.
 
 	if (Faen == true || Angrep == true)
-	{
-		if (Direction > 0)
-		{
-			Direction = -0.5f;
-			Jump();
-		}
-
-		LastHit += DeltaTime;
-		if (LastHit > HitBackTime)
-		{
-			if (Faen == true)
-				Faen = false;
-			else
-				Angrep = false;
-
-			Direction = 1.f;
-			LastHit = 0.f;
-		}
-	}
+		HitBack(DeltaTime);
 
 	//Følger etter spilleren hvis spilleren er nær nok.
 	if (NewDirection.Size() < AttackDistance)
 		AddMovementInput(GetActorForwardVector(), Direction);
 
 	//Finner spillerens posisjon og roterer seg mot spilleren
-	NewDirection = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)->GetActorLocation() - GetActorLocation();
-	NewDirection.Z = 0.f;
-	SetActorRotation(NewDirection.Rotation());
+	if (UGameplayStatics::GetPlayerCharacter(GetWorld(), 0))
+	{
+		NewDirection = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)->GetActorLocation() - GetActorLocation();
+		NewDirection.Z = 0.f;
+		SetActorRotation(NewDirection.Rotation());
+	}
 
 	//Dreper fienden hvis han har falt utenfor kartet.
 	if (GetActorLocation().Z < Cast<ATimGameMode>(GetWorld()->GetAuthGameMode())->KillZ)
@@ -80,6 +65,27 @@ void AFiende::ImHit(float Damage)
 	}
 
 	Faen = true;
+}
+
+void AFiende::HitBack(float DeltaTime)
+{
+	if (Direction > 0)
+	{
+		Direction = -0.5f;
+		Jump();
+	}
+
+	LastHit += DeltaTime;
+	if (LastHit > HitBackTime)
+	{
+		if (Faen)
+			Faen = false;
+		else
+			Angrep = false;
+
+		Direction = 1.f;
+		LastHit = 0.f;
+	}
 }
 
 void AFiende::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor,

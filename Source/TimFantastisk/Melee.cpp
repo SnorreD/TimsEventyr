@@ -6,6 +6,7 @@
 #include "AvstandFiende.h"
 #include "Bullet.h"
 #include "Boss1.h"
+#include "Hjernetrim2Fiende.h"
 
 
 // Sets default values
@@ -61,6 +62,11 @@ void AMelee::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherAc
 		else if (OtherActor->IsA(ABoss1::StaticClass()))
 		{
 			Cast<ABoss1>(OtherActor)->ImHit(Damage);
+			HaveHit = true;
+		}
+		else if (OtherActor->IsA(AHjernetrim2Fiende::StaticClass()))
+		{
+			Cast<AHjernetrim2Fiende>(OtherActor)->ImHit(Damage);
 			HaveHit = true;
 		}
 	}

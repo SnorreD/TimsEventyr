@@ -39,9 +39,9 @@ void ASpikes::Tick(float DeltaTime)
 
 		TimeSinceModeChange += DeltaTime;
 		if (MovementMode == 1)
-			SetActorLocation(FVector(GetActorLocation().X, GetActorLocation().Y, GetActorLocation().Z - (DeltaTime * 33)));
+			SetActorLocation(FVector(GetActorLocation().X, GetActorLocation().Y, GetActorLocation().Z - (DeltaTime * 15)));
 		else if (MovementMode == 3)
-			SetActorLocation(FVector(GetActorLocation().X, GetActorLocation().Y, GetActorLocation().Z + (DeltaTime * 33)));
+			SetActorLocation(FVector(GetActorLocation().X, GetActorLocation().Y, GetActorLocation().Z + (DeltaTime * 15)));
 	}
 
 }
