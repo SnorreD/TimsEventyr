@@ -12,7 +12,7 @@
 
 ATim::ATim()
 {
-	OurVisibleComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("OurVisibleComponent"));
+	//OurVisibleComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("OurVisibleComponent"));
 
 	// Setter opp kameraet.
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
@@ -27,7 +27,7 @@ ATim::ATim()
 	TopDownCameraComponent->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	TopDownCameraComponent->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
-	OurVisibleComponent->SetupAttachment(RootComponent);
+	//OurVisibleComponent->SetupAttachment(RootComponent);
 
 	//Setter opp muse sikte.
 	CursorToWorld = CreateDefaultSubobject<UDecalComponent>("CursorToWorld");
@@ -106,6 +106,7 @@ void ATim::Tick(float DeltaTime)
 		{
 			Skytesperre = false;
 			TidSidenAngrep = 0.f;
+			RangeMelee = 0;
 		}
 	}
 
@@ -227,6 +228,7 @@ void ATim::AttackMelee()
 		AActor *Sword = GetWorld()->SpawnActor<AMelee>(MeleeBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, FRotator(90.f, GetActorRotation().Yaw, GetActorRotation().Roll));
 		Sword->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform, NAME_None);
 
+		RangeMelee = 1;
 		Skytesperre = true;
 	}
 
@@ -248,6 +250,7 @@ void ATim::AttackShoot()
 			if (Bullet)
 				Cast<ABullet>(Bullet)->EnemyBullet = false;
 
+			RangeMelee = 2;
 			Skytesperre = true;
 		}
 		else if (Level == 2 && !ChargeBullet)
@@ -260,6 +263,7 @@ void ATim::AttackShoot()
 				Cast<ABullet>(ChargeBullet)->TimeBeforeDestroy = 100.f;
 				Cast<ABullet>(ChargeBullet)->EnemyBullet = false;
 				Charge = true;
+				RangeMelee = 2;
 				Skytesperre = true;
 			}
 			

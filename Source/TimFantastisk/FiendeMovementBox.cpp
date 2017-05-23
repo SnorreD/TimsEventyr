@@ -43,8 +43,11 @@ void AFiendeMovementBox::OnOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 {
 	if (OtherActor->IsA(AHjernetrim2Fiende::StaticClass()))
 	{
-		if (Jump == EnemysCount || Jump == 5)
+		if (Jump == EnemysCount || Jump == 5 && Cast<AHjernetrim2Fiende>(OtherActor)->FiendeTag != true)
+		{
 			StartJump(OtherActor);
+			Cast<AHjernetrim2Fiende>(OtherActor)->FiendeTag = true;
+		}
 		if (MoveToThis == EnemysCount || MoveToThis == 5)
 			Cast<AHjernetrim2Fiende>(OtherActor)->SetActorRotation(GetActorRotation());
 		if (Move180 == EnemysCount || Move180 == 5)

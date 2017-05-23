@@ -42,6 +42,16 @@ void AHjernetrim2Fiende::Tick(float DeltaTime)
 		SetActorLocation(NewLocation);
 	}
 
+	if (FiendeTag)
+	{
+		Timer += DeltaTime;
+		if (Timer > 0.2f)
+		{
+			FiendeTag = false;
+			Timer = 0.f;
+		}
+	}
+
 }
 
 void AHjernetrim2Fiende::Turn(float DeltaTime)
@@ -117,7 +127,7 @@ void AHjernetrim2Fiende::SetAttackMode(int Mode)
 		TimeBetweenShots = 0.1f;
 		break;
 	case 2:
-		TimeBetweenShots = 1.f;
+		TimeBetweenShots = 1.5f;
 		break;
 	case 3:
 		TimeBetweenShots = 4.0f;

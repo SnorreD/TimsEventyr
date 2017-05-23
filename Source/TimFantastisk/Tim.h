@@ -43,9 +43,6 @@ public:
 	UPROPERTY(EditAnywhere)
 		int Speed = 400;
 
-	UPROPERTY(EditAnywhere)
-		USceneComponent* OurVisibleComponent;
-
 	//Kamera.
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		class UCameraComponent* TopDownCameraComponent;
@@ -66,7 +63,12 @@ public:
 		TSubclassOf<class AShield> ShieldBlueprint;
 
 	//Angrep variabler.
-	bool Skytesperre{ false };
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		bool Skytesperre = false;
+
+	//Sann for Avstand, falsk for nærangrep.
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		int RangeMelee = 0;
 
 	UPROPERTY(EditAnywhere)
 		float AngrepMellomrom = 0.5f;

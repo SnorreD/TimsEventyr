@@ -41,12 +41,24 @@ public:
 	bool Faen{ false };
 	bool Angrep{ false };
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		bool Walking = false;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		bool Attacking = false;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		bool Dead = false;
+
 	float HitBackTime{ 0.6f };
 	float LastHit{ 0.f };
 
 	float Direction = 1.f;
 
 	void HitBack(float DeltaTime);
+
+	float Timer{ 0.f };
+	float DeadTime{ 1.208f };
 
 	UFUNCTION()
 		void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor,

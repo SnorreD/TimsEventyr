@@ -36,6 +36,7 @@ public:
 
 	float TurnTime{ 1.f };
 	float TimeSinceTurn{ 0.f };
+	float Timer{ 0.f };
 
 	UPROPERTY(EditAnywhere, Category = "Attack")
 		TSubclassOf<class ABullet> BulletBlueprint;
@@ -59,5 +60,7 @@ public:
 	void ImHit(float Damage);
 	void StartAttacking(float DeltaTime);
 	void SetAttackMode(int Mode);
+
+	bool FiendeTag = false;
 	
 };

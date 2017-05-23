@@ -20,16 +20,35 @@ AHjernetrim2::AHjernetrim2()
 	Entrance->OnComponentBeginOverlap.AddDynamic(this, &AHjernetrim2::OnOverlapEntrance);
 	RootComponent = Entrance;
 
-	Key = CreateDefaultSubobject<UBoxComponent>(TEXT("Key"));
-	Key->bGenerateOverlapEvents = true;
-	Key->OnComponentBeginOverlap.AddDynamic(this, &AHjernetrim2::OnOverlapKey);
-	Key->SetupAttachment(RootComponent);
+	Key1 = CreateDefaultSubobject<UBoxComponent>(TEXT("Key1"));
+	Key1->bGenerateOverlapEvents = true;
+	Key1->OnComponentBeginOverlap.AddDynamic(this, &AHjernetrim2::OnOverlapKey1);
+	Key1->SetupAttachment(RootComponent);
+
+	Key2 = CreateDefaultSubobject<UBoxComponent>(TEXT("Key2"));
+	Key2->bGenerateOverlapEvents = true;
+	Key2->OnComponentBeginOverlap.AddDynamic(this, &AHjernetrim2::OnOverlapKey2);
+	Key2->SetupAttachment(RootComponent);
+
+	Key1Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Key1Mesh"));
+	Key1Mesh->SetupAttachment(Key1);
+
+	Key2Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Key2Mesh"));
+	Key2Mesh->SetupAttachment(Key2);
 
 	Alter = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Alter"));
-	Alter->SetupAttachment(Key);
+	Alter->SetupAttachment(Key2);
+
+	Platform = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Platform"));
+	Platform->SetupAttachment(RootComponent);
 
 	Wait = CreateDefaultSubobject<UBoxComponent>(TEXT("Wait"));
 	Wait->SetupAttachment(RootComponent);
+
+	Door = CreateDefaultSubobject<UBoxComponent>(TEXT("Door"));
+	Door->bGenerateOverlapEvents = true;
+	Door->OnComponentBeginOverlap.AddDynamic(this, &AHjernetrim2::OnOverlapDoor);
+	Door->SetupAttachment(RootComponent);
 
 	Spawn1 = CreateDefaultSubobject<UBoxComponent>(TEXT("Spawn1"));
 	Spawn1->SetupAttachment(RootComponent);
@@ -90,7 +109,7 @@ AHjernetrim2::AHjernetrim2()
 	RedCrystalMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RedMesh"));
 	RedCrystalMesh->SetupAttachment(RedCrystal);
 
-	//Setter alle krystaller til falsk.
+	//Setter alle krystaller og kontainere til falsk.
 	for (int i = 0; i < 4; i++)
 	{
 		Crystals[i] = false;
@@ -105,7 +124,8 @@ void AHjernetrim2::BeginPlay()
 {
 	Super::BeginPlay();
 
-	KeyPos = Key->GetComponentLocation();
+	Key2Pos = Key2->GetComponentLocation();
+	PlatPos = Platform->GetComponentLocation();
 	
 }
 
@@ -118,7 +138,7 @@ void AHjernetrim2::Tick(float DeltaTime)
 	{
 		Timer += DeltaTime;
 		auto CurrentGameMode = Cast<ATimGameMode>(GetWorld()->GetAuthGameMode());
-		CurrentGameMode->Tips = "Du trenger den " + MessageText;
+		CurrentGameMode->Tips = "Du trenger " + MessageText;
 		if (Timer > Time)
 		{
 			CurrentGameMode->Tips = "";
@@ -162,7 +182,7 @@ void AHjernetrim2::Tick(float DeltaTime)
 	{
 		Timer += DeltaTime;
 		if (Timer < Time)
-			Key->SetWorldLocation(FVector(KeyPos.X, KeyPos.Y, KeyPos.Z + (Timer*96.f)));
+			Key2->SetWorldLocation(FVector(Key2Pos.X, Key2Pos.Y, Key2Pos.Z + (Timer*46.f)));
 		else
 		{
 			Working = 5;
@@ -184,6 +204,18 @@ void AHjernetrim2::Tick(float DeltaTime)
 			Camera->RelativeRotation = FRotator(-60.f, 0.f, 0.f);
 			Camera->TargetOffset = FVector(0.f, 0.f, 0.f);
 			Working = -1.f;
+		}
+	}
+
+	if (Working == 7)
+	{
+		Timer += DeltaTime;
+		if (Timer < Time)
+			Platform->SetWorldLocation(FVector(PlatPos.X, PlatPos.Y, PlatPos.Z + (Timer*110.f)));
+		else
+		{
+			Timer = 0.f;
+			Working = -1;
 		}
 	}
 		
@@ -291,8 +323,10 @@ void AHjernetrim2::OnOverlapRedCr(UPrimitiveComponent* OverlappedComponent, AAct
 	if (OtherActor->IsA(ATim::StaticClass()))
 	{
 		Crystals[3] = true;
-		RedCrystalMesh->DestroyComponent();
-		RedCrystal->DestroyComponent();
+		if (RedCrystalMesh)
+			RedCrystalMesh->DestroyComponent();
+		if (RedCrystal)
+			RedCrystal->DestroyComponent();
 	}
 	else if (OtherActor->IsA(AHjernetrim2Fiende::StaticClass()) && !Taken[3])
 	{
@@ -304,11 +338,28 @@ void AHjernetrim2::OnOverlapRedCr(UPrimitiveComponent* OverlappedComponent, AAct
 	}
 }
 
-void AHjernetrim2::OnOverlapKey(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor,
+void AHjernetrim2::OnOverlapKey1(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor,
 	UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex,
 	bool bFromSweep, const FHitResult &SweepResult)
 {
-
+	if (OtherActor->IsA(ATim::StaticClass()))
+	{
+		Keys--;
+		Working = 7;
+		Key1Mesh->DestroyComponent();
+		Key1->DestroyComponent();
+	}
+}
+void AHjernetrim2::OnOverlapKey2(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor,
+	UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex,
+	bool bFromSweep, const FHitResult &SweepResult)
+{
+	if (OtherActor->IsA(ATim::StaticClass()))
+	{
+		Keys--;
+		Key2Mesh->DestroyComponent();
+		Key2->DestroyComponent();
+	}
 }
 void AHjernetrim2::OnOverlapEntrance(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor,
 	UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex,
@@ -325,10 +376,10 @@ void AHjernetrim2::OnOverlapEntrance(UPrimitiveComponent* OverlappedComponent, A
 		Camera->TargetOffset = FVector(0.f, 600.f, 0.f);
 		AActor *Fiende = GetWorld()->SpawnActor<AHjernetrim2Fiende>(FiendeBlueprint, Spawn1->GetComponentLocation(), Spawn1->GetComponentRotation());
 		if (Fiende)
-			Cast<AHjernetrim2Fiende>(Fiende)->SetAttackMode(1);
+			Cast<AHjernetrim2Fiende>(Fiende)->SetAttackMode(2);
 		Fiende = GetWorld()->SpawnActor<AHjernetrim2Fiende>(FiendeBlueprint, Spawn2->GetComponentLocation(), Spawn2->GetComponentRotation());
 		if (Fiende)
-			Cast<AHjernetrim2Fiende>(Fiende)->SetAttackMode(2);
+			Cast<AHjernetrim2Fiende>(Fiende)->SetAttackMode(1);
 		Fiende = GetWorld()->SpawnActor<AHjernetrim2Fiende>(FiendeBlueprint, Spawn3->GetComponentLocation(), Spawn3->GetComponentRotation());
 		if (Fiende)
 			Cast<AHjernetrim2Fiende>(Fiende)->SetAttackMode(3);
@@ -339,6 +390,25 @@ void AHjernetrim2::OnOverlapEntrance(UPrimitiveComponent* OverlappedComponent, A
 		Entrance->DestroyComponent();
 	}
 }
+void AHjernetrim2::OnOverlapDoor(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor,
+	UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex,
+	bool bFromSweep, const FHitResult &SweepResult)
+{
+	if (OtherActor->IsA(ATim::StaticClass()))
+	{
+		if (Keys != 0)
+		{
+			Message = true;
+			MessageText = FString::FromInt(Keys) + KeyText;
+		}
+		else
+		{
+			Finished = true;
+			Door->DestroyComponent();
+		}
+	}
+}
+
 
 void AHjernetrim2::OverlapContainer(int tall)
 {

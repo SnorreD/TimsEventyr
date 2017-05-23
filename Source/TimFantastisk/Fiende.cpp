@@ -34,11 +34,19 @@ void AFiende::Tick(float DeltaTime)
 		HitBack(DeltaTime);
 
 	//Følger etter spilleren hvis spilleren er nær nok.
-	if (NewDirection.Size() < AttackDistance)
+	if (NewDirection.Size() < AttackDistance && !Dead)
+	{
 		AddMovementInput(GetActorForwardVector(), Direction);
+		Walking = true;
+		if (NewDirection.Size() < 150.f)
+			Attacking = true;
+		else
+			Attacking = false;
+	}
+		
 
 	//Finner spillerens posisjon og roterer seg mot spilleren
-	if (UGameplayStatics::GetPlayerCharacter(GetWorld(), 0))
+	if (UGameplayStatics::GetPlayerCharacter(GetWorld(), 0) && !Dead)
 	{
 		NewDirection = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)->GetActorLocation() - GetActorLocation();
 		NewDirection.Z = 0.f;
@@ -51,6 +59,12 @@ void AFiende::Tick(float DeltaTime)
 		Destroy();
 	}
 
+	if (Dead)
+	{
+		Timer += DeltaTime;
+		if (Timer > DeadTime)
+			Destroy();
+	}
 
 }
 
@@ -61,7 +75,7 @@ void AFiende::ImHit(float Damage)
 
 	if (Health <= 0.f)
 	{
-			this->Destroy();
+		Dead = true;
 	}
 
 	Faen = true;
@@ -93,7 +107,7 @@ void AFiende::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherA
 	bool bFromSweep, const FHitResult &SweepResult)
 {
 	//Hvis fienden rører spilleren tar den et liv fra spilleren.
-	if (OtherActor->IsA(ATim::StaticClass()))
+	if (OtherActor->IsA(ATim::StaticClass()) && !Dead)
 	{
 		if (Faen == false)
 		{
