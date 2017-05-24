@@ -7,6 +7,7 @@
 #include "Bullet.h"
 #include "Boss1.h"
 #include "Hjernetrim2Fiende.h"
+#include "LastBoss.h"
 
 
 // Sets default values
@@ -69,11 +70,17 @@ void AMelee::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherAc
 			Cast<AHjernetrim2Fiende>(OtherActor)->ImHit(Damage);
 			HaveHit = true;
 		}
+		else if (OtherActor->IsA(ALastBoss::StaticClass()))
+		{
+			Cast<ALastBoss>(OtherActor)->ImHit(Damage);
+			HaveHit = true;
+		}
 	}
-	//Hvis sverdet treffer en kule ødeleges kulen.
+	//Hvis sverdet treffer en kule ødeleges kulen (så lenge kulen ikke er sterk).
 	if (OtherActor->IsA(ABullet::StaticClass()))
 	{
-		Cast<ABullet>(OtherActor)->Destroy();
+		if (Cast<ABullet>(OtherActor)->StrongBullet == false)
+			Cast<ABullet>(OtherActor)->Destroy();
 	}
 }
 

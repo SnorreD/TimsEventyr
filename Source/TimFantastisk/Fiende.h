@@ -41,6 +41,7 @@ public:
 	bool Faen{ false };
 	bool Angrep{ false };
 
+	//Variabler brukt til animasjon //////////////////
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		bool Walking = false;
 
@@ -49,6 +50,7 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		bool Dead = false;
+	////////////////////////////////////////////////////
 
 	float HitBackTime{ 0.6f };
 	float LastHit{ 0.f };

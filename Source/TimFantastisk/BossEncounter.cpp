@@ -4,6 +4,7 @@
 #include "BossEncounter.h"
 #include "Tim.h"
 #include "Boss1.h"
+#include "LastBoss.h"
 
 
 // Sets default values
@@ -30,19 +31,34 @@ void ABossEncounter::BeginPlay()
 void ABossEncounter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (Boss)
+	if (Boss && !FinalBoss)
+	{
 		if (Cast<ABoss1>(Boss)->Health <= 0)
 			Destroy();
+	}
+	else if (Boss && FinalBoss)
+	{
+		if (Cast<ALastBoss>(Boss)->Health <= 0)
+			Destroy();
+	}
 
 }
 
+//Sjer litt mer i blueprint og Boss Health.
 void ABossEncounter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor,
 	UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex,
 	bool bFromSweep, const FHitResult &SweepResult)
 {
 	if (OtherActor->IsA(ABoss1::StaticClass()) && Boss != Cast<ABoss1>(OtherActor))
 	{
+		FinalBoss = false;
 		Boss = Cast<ABoss1>(OtherActor);
+	}
+
+	if (OtherActor->IsA(ALastBoss::StaticClass()) && Boss != Cast<ALastBoss>(OtherActor))
+	{
+		FinalBoss = true;
+		Boss = Cast<ALastBoss>(OtherActor);
 	}
 		
 

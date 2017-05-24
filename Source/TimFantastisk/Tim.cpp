@@ -12,8 +12,6 @@
 
 ATim::ATim()
 {
-	//OurVisibleComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("OurVisibleComponent"));
-
 	// Setter opp kameraet.
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
@@ -27,16 +25,9 @@ ATim::ATim()
 	TopDownCameraComponent->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	TopDownCameraComponent->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
-	//OurVisibleComponent->SetupAttachment(RootComponent);
-
 	//Setter opp muse sikte.
 	CursorToWorld = CreateDefaultSubobject<UDecalComponent>("CursorToWorld");
 	CursorToWorld->SetupAttachment(RootComponent);
-	//static ConstructorHelpers::FObjectFinder<UMaterial> DecalMaterialAsset(TEXT("Game/Assets/M_Cursor_Decal"));
-	//if (DecalMaterialAsset.Succeeded())
-	//{
-	//	CursorToWorld->SetDecalMaterial(DecalMaterialAsset.Object);
-	//}
 	CursorToWorld->DecalSize = FVector(16.0f, 32.0f, 32.0f);
 	CursorToWorld->SetRelativeRotation(FRotator(90.0f, 0.0f, 0.0f).Quaternion());
 }
@@ -102,11 +93,16 @@ void ATim::Tick(float DeltaTime)
 	if (Skytesperre == true)
 	{
 		TidSidenAngrep += DeltaTime;
-		if (TidSidenAngrep > AngrepMellomrom)
+		if (TidSidenAngrep > 0.37f)
 		{
-			Skytesperre = false;
-			TidSidenAngrep = 0.f;
-			RangeMelee = 0;
+			if (RangeMelee == 1)
+				RangeMelee = 0;
+			if (TidSidenAngrep > AngrepMellomrom)
+			{
+				Skytesperre = false;
+				TidSidenAngrep = 0.f;
+				RangeMelee = 0;
+			}
 		}
 	}
 
@@ -130,6 +126,7 @@ void ATim::Tick(float DeltaTime)
 		}
 	}
 
+	//Hvis spilleren har tatt skade er han immun en liten stund.
 	if (DamageTaken == true)
 	{
 		TimeSinceDam += DeltaTime;
@@ -140,6 +137,7 @@ void ATim::Tick(float DeltaTime)
 		}
 	}
 
+	//Gjør kulen som skal lades gradvis større med tiden.
 	if (Charge == true)
 	{
 		if (ChargeBullet)
@@ -177,7 +175,7 @@ void ATim::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void ATim::MoveX(float AxisValue)
 {
-	//Går fremover.
+	//Går fremover. Hvis klatring beveger han klatreplatformen opp og ned.
 	if (Climbing != true)
 		AddMovementInput(FVector(1.f, 0.f, 0.f), AxisValue);
 	else if (Climbing == true && AxisValue > 0)
@@ -198,7 +196,7 @@ void ATim::MoveY(float AxisValue)
 
 void ATim::Jump()
 {
-	//Hopp
+	//Hopp eller dobbelthopp hvis allerede hoppet. Funker bare en gang per hopp.
 	if (Climbing == true)
 		Climbing = false;
 
@@ -246,7 +244,7 @@ void ATim::AttackShoot()
 		}
 		if (Level == 1)
 		{
-			AActor *Bullet = GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
+			AActor *Bullet = GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + GetActorForwardVector() * 50.f, GetActorRotation());
 			if (Bullet)
 				Cast<ABullet>(Bullet)->EnemyBullet = false;
 
@@ -272,6 +270,7 @@ void ATim::AttackShoot()
 
 }
 
+	//Gjør klar en kule for lading.
 void ATim::AttackShootCharge()
 {
 	if (ChargeBullet)
@@ -290,7 +289,7 @@ void ATim::ShieldOn()
 	//Spilleren kan få frem et skjold som bokker skade for en viss mengde liv før det må regenereres.
 	if (ShieldDestruction == false && Charge == false)
 	{
-		Shield = GetWorld()->SpawnActor<AShield>(ShieldBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
+		Shield = GetWorld()->SpawnActor<AShield>(ShieldBlueprint, GetActorLocation() + GetActorForwardVector() * 45.f, GetActorRotation());
 		Shield->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform, NAME_None);
 		Cast<AShield>(Shield)->Health = ShieldHealth;
 		ShieldOut = true;

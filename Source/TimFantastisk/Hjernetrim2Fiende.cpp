@@ -3,7 +3,9 @@
 #include "TimFantastisk.h"
 #include "Hjernetrim2Fiende.h"
 #include "Bullet.h"
-#include "Fiende.h"
+
+
+//Denne fienden brukes i samsvar med FiendeMovementBox.
 
 
 // Sets default values
@@ -32,6 +34,7 @@ void AHjernetrim2Fiende::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	//Hvis den ikke skal snu seg eller angrepe går den rett fram.
 	if (StartTurn)
 		Turn(DeltaTime);
 	else if (Attack)
@@ -54,6 +57,7 @@ void AHjernetrim2Fiende::Tick(float DeltaTime)
 
 }
 
+//Snur seg basert på gradene den skal snu seg.
 void AHjernetrim2Fiende::Turn(float DeltaTime)
 {
 	TimeSinceTurn += DeltaTime;
@@ -66,6 +70,7 @@ void AHjernetrim2Fiende::Turn(float DeltaTime)
 	}
 }
 
+//Start å angrepe når den er bedt om det.
 void AHjernetrim2Fiende::StartAttacking(float DeltaTime)
 {
 	FVector NewDirection = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)->GetActorLocation() - GetActorLocation();
@@ -75,8 +80,10 @@ void AHjernetrim2Fiende::StartAttacking(float DeltaTime)
 	if (NewDirection.Size() < ShootDistance)
 	{
 		LastShot += DeltaTime;
+		//Angreps modus blir valgt, en til hver av de 4.
 		switch (AttackMode)
 		{
+			//Et sperreild av kuler.
 		case 1:
 			if (BarrageCounter >= 10)
 			{
@@ -90,6 +97,7 @@ void AHjernetrim2Fiende::StartAttacking(float DeltaTime)
 				++BarrageCounter;
 			}
 			break;
+			//En hagle effekt av kuler.
 		case 2:
 			if (LastShot > TimeBetweenShots)
 			{
@@ -101,14 +109,8 @@ void AHjernetrim2Fiende::StartAttacking(float DeltaTime)
 				LastShot = 0.f;
 			}
 			break;
+			// Vanlig raskt på med kuler.
 		case 3:
-			if (LastShot > TimeBetweenShots)
-			{
-				GetWorld()->SpawnActor<AFiende>(FiendeBlueprint, GetActorLocation() + GetActorForwardVector() * 100.f, GetActorRotation());
-				LastShot = 0.f;
-			}
-			break;
-		case 4:
 			if (LastShot > TimeBetweenShots)
 			{
 				GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation(), GetActorRotation());
@@ -121,6 +123,7 @@ void AHjernetrim2Fiende::StartAttacking(float DeltaTime)
 
 void AHjernetrim2Fiende::SetAttackMode(int Mode)
 {
+	//Når angrepesmodusen blir satt blir også hastigheten av angrepet satt basert på hvilket angrep den skal ha.
 	switch (Mode)
 	{
 	case 1:
@@ -130,9 +133,6 @@ void AHjernetrim2Fiende::SetAttackMode(int Mode)
 		TimeBetweenShots = 1.5f;
 		break;
 	case 3:
-		TimeBetweenShots = 4.0f;
-		break;
-	case 4:
 		TimeBetweenShots = 0.3f;
 		break;
 	}

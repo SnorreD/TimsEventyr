@@ -11,7 +11,7 @@ AShield::AShield()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	RootCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("MyShield"));
+	RootCapsule = CreateDefaultSubobject<UBoxComponent>(TEXT("MyShield"));
 	RootComponent = RootCapsule;
 	RootCapsule->SetRelativeScale3D(FVector(0.5f, 1.5f, 1.5f));
 	RootCapsule->bGenerateOverlapEvents = true;
@@ -60,17 +60,29 @@ void AShield::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherA
 		}
 	}
 
+	//Hvis en kule treffer tauet blir det reflektert tilbake.
 	else if (OtherActor->IsA(ABullet::StaticClass()))
 	{
 		if (Cast<ABullet>(OtherActor)->EnemyBullet == true)
 		{
-			Cast<ABullet>(OtherActor)->EnemyBullet = false;
-			if (Cast<ABullet>(OtherActor)->Speed > 0)
-				Cast<ABullet>(OtherActor)->Speed *= -1;
+			if (Cast<ABullet>(OtherActor)->StrongBullet == false)
+			{
+				Cast<ABullet>(OtherActor)->EnemyBullet = false;
+				if (Cast<ABullet>(OtherActor)->Speed > 0)
+					Cast<ABullet>(OtherActor)->Speed *= -1;
 
-			Health -= Cast<ABullet>(OtherActor)->Damage;
-			ACharacter* myCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
-			Cast<ATim>(myCharacter)->ShieldHealth = Health;
+				Health -= Cast<ABullet>(OtherActor)->Damage;
+				ACharacter* myCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+				Cast<ATim>(myCharacter)->ShieldHealth = Health;
+			}
+			//Men hvis kulen er sterk blir skjoldet og kulen ødelagt.
+			else if (Cast<ABullet>(OtherActor)->StrongBullet == true)
+			{
+				Health -= 100.f;
+				ACharacter* myCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+				Cast<ATim>(myCharacter)->ShieldHealth = Health;
+				OtherActor->Destroy();
+			}
 		}
 	}
 

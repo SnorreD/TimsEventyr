@@ -37,6 +37,7 @@ public:
 	float Velocity{ 0.f };
 
 
+	//Minimum og makshøyden som spilleren kan bli ført av tauet.
 	UPROPERTY(EditAnywhere, Category = "Movement")
 		float MaxHeight;
 

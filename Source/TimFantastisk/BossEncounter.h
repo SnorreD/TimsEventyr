@@ -30,6 +30,8 @@ public:
 			UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex,
 			bool bFromSweep, const FHitResult &SweepResult);
 
+	bool FinalBoss{ false };
+
 	AActor* Boss;
 	bool BossExist = false;
 	

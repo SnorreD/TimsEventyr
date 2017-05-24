@@ -39,6 +39,7 @@ void ALevelUp::Tick(float DeltaTime)
 
 }
 
+//Gir spilleren en ny kraft, og en melding.
 void ALevelUp::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor,
 	UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex,
 	bool bFromSweep, const FHitResult &SweepResult)
@@ -51,7 +52,7 @@ void ALevelUp::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *Other
 		OurVisibleComponent->DestroyComponent();
 	}
 }
-
+//Fjerner meldingen.
 void ALevelUp::EndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	if (OtherActor->IsA(ATim::StaticClass()))

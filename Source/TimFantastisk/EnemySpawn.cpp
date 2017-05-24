@@ -44,17 +44,24 @@ void AEnemySpawn::Tick(float DeltaTime)
 		{
 			if (CloseRangeEnemy == true)
 			{
-				GetWorld()->SpawnActor<AFiende>(FiendeBlueprint, GetActorLocation(), FRotator(90.f, 0.f, 0.f));
+				AActor *Fiende = GetWorld()->SpawnActor<AFiende>(FiendeBlueprint, GetActorLocation(), FRotator(90.f, 0.f, 0.f));
 				LastSpawn = 0.f;
 				++AmountSpawned;
+				if (Fiende)
+					Cast<AFiende>(Fiende)->AttackDistance = EnemyAttackDistance;
 			}
 			else
 			{
-				GetWorld()->SpawnActor<AAvstandFiende>(AvstandFiendeBlueprint, GetActorLocation() + FVector(1.f, 0.f, 0.f) * 100.f, FRotator(90.f, 0.f, 0.f));
+				AActor *Fiende = GetWorld()->SpawnActor<AAvstandFiende>(AvstandFiendeBlueprint, GetActorLocation() + FVector(1.f, 0.f, 0.f) * 100.f, FRotator(90.f, 0.f, 0.f));
 				LastSpawn = 0.f;
 				++AmountSpawned;
+				if (Fiende)
+					Cast<AAvstandFiende>(Fiende)->MoveDistance = EnemyAttackDistance;
 			}
-			
+			if (Rand)
+			{
+				CloseRangeEnemy = FMath::RandBool();
+			}
 		}
 	}
 	

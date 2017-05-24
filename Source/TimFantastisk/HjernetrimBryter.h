@@ -42,13 +42,19 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		bool PlayerActivate = false;
 
-	UPROPERTY(EditAnywhere)
-		bool DestroyHitBox = false;
-
+	//Movedistance 1: flytter døren, Movedistance 2: flytter knappen.
 	UPROPERTY(EditAnywhere)
 		float MoveDistance = 100.f;
+	UPROPERTY(EditAnywhere)
+		float MoveDistance2 = 20.f;
 
-	float MoveTime{ 10.f };
+	UPROPERTY(EditAnywhere)
+		float MoveTime = 10.f;
+
+	//Fiender kan aktivere knappen, og døren/knappen vil gå opp igjen etter en stund før prossesen kan gjentas.
+	UPROPERTY(EditAnywhere)
+		bool AcceptMinions = false;
+
 	float StartTime{ 0.f };
 	
 };

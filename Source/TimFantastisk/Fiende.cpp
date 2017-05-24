@@ -12,9 +12,9 @@ AFiende::AFiende()
 	PrimaryActorTick.bCanEverTick = true;
 
 	RootSphere = CreateDefaultSubobject<USphereComponent>(TEXT("HitBox"));
+	RootSphere->SetupAttachment(RootComponent);
 	RootSphere->bGenerateOverlapEvents = true;
 	RootSphere->OnComponentBeginOverlap.AddDynamic(this, &AFiende::OnOverlap);
-	RootSphere->AttachToComponent(RootComponent, FAttachmentTransformRules(EAttachmentRule::KeepRelative, true));
 }
 
 void AFiende::BeginPlay()

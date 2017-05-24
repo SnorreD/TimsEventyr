@@ -30,6 +30,17 @@ public:
 	UPROPERTY(EditAnywhere)
 		int NumberOfEnemies = 10;
 
+	//Kan gi fienden som kommer ut en fast angreps rekkevidde.
+	UPROPERTY(EditAnywhere)
+		bool SetEnemyAttackDistance = false;
+
+	UPROPERTY(EditAnywhere)
+		float EnemyAttackDistance = 5000.f;
+
+	//Kan velge tilfeldig fiende.
+	UPROPERTY(EditAnywhere)
+		bool Rand = false;
+
 	//Tellere.
 	float LastSpawn{ 0.f };
 	int AmountSpawned{ 0 };

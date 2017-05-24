@@ -31,12 +31,14 @@ void AFiendeMovementBox::Tick(float DeltaTime)
 
 }
 
+//Fienden hopper ved at den dyttes opp og fram.
 void AFiendeMovementBox::StartJump(AActor *OtherActor)
 {
 	Cast<AHjernetrim2Fiende>(OtherActor)->RootCapsule->AddImpulse(FVector(0.f, 0.f, 1.f * JumpHeight));
 	Cast<AHjernetrim2Fiende>(OtherActor)->RootCapsule->AddImpulse(GetActorForwardVector() * 30000.f);
 }
 
+//Basert på hva du har valgt vil fienden utføre forskjellige handlinger.
 void AFiendeMovementBox::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor,
 	UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex,
 	bool bFromSweep, const FHitResult &SweepResult)

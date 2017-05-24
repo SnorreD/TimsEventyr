@@ -5,6 +5,9 @@
 #include "GameFramework/Actor.h"
 #include "FiendeMovementBox.generated.h"
 
+//Et veldig scriptet forsøk på AI
+
+
 UCLASS()
 class TIMFANTASTISK_API AFiendeMovementBox : public AActor
 {

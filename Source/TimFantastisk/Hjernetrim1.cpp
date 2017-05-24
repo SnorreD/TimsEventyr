@@ -4,6 +4,7 @@
 #include "Hjernetrim1.h"
 #include "Tim.h"
 
+//Mye er gjort i blueprint her.
 
 // Sets default values
 AHjernetrim1::AHjernetrim1()
@@ -41,6 +42,7 @@ void AHjernetrim1::Tick(float DeltaTime)
 
 int AHjernetrim1::ChangeLight(int x)
 {
+	//Forandrer lyset når man trykker på en knapp i blueprint.
 	if (!Finished)
 	{
 		if (x < 4)

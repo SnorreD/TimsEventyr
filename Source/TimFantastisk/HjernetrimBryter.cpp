@@ -3,7 +3,8 @@
 #include "TimFantastisk.h"
 #include "HjernetrimBryter.h"
 #include "Tim.h"
-
+#include "Fiende.h"
+#include "Avstandfiende.h"
 
 // Sets default values
 AHjernetrimBryter::AHjernetrimBryter()
@@ -39,9 +40,23 @@ void AHjernetrimBryter::Tick(float DeltaTime)
 
 	if (PlayerActivate)
 	{
+		//Flytter døren ned/(senere opp) hvis den er aktivert
 		StartTime += DeltaTime;
 		if (StartTime < MoveTime)
-			Door->SetWorldLocation(FVector(Door->GetComponentLocation().X, Door->GetComponentLocation().Y, Door->GetComponentLocation().Z - (MoveDistance/MoveTime)*DeltaTime));
+		{
+			Door->SetWorldLocation(FVector(Door->GetComponentLocation().X, Door->GetComponentLocation().Y, Door->GetComponentLocation().Z - (MoveDistance / MoveTime)*DeltaTime));
+			BryterMesh->SetWorldLocation(FVector(BryterMesh->GetComponentLocation().X, BryterMesh->GetComponentLocation().Y, BryterMesh->GetComponentLocation().Z - (MoveDistance2 / MoveTime)*DeltaTime));
+		}
+		if (StartTime > MoveTime + 0.5f && AcceptMinions)
+		{
+			Door->SetWorldLocation(FVector(Door->GetComponentLocation().X, Door->GetComponentLocation().Y, Door->GetComponentLocation().Z + (MoveDistance / MoveTime)*DeltaTime));
+			BryterMesh->SetWorldLocation(FVector(BryterMesh->GetComponentLocation().X, BryterMesh->GetComponentLocation().Y, BryterMesh->GetComponentLocation().Z + (MoveDistance2 / MoveTime)*DeltaTime));
+		}
+		if (StartTime >= MoveTime*2 + 0.5f && AcceptMinions)
+		{
+			StartTime = 0.f;
+			PlayerActivate = false;
+		}
 	}
 
 }
@@ -53,12 +68,12 @@ void AHjernetrimBryter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AAct
 	if (OtherActor->IsA(ATim::StaticClass()))
 	{
 		if (PlayerActivate == false)
-		{
 			PlayerActivate = true;
-			if (DestroyHitBox)
-				BryterMesh->DestroyComponent();
-		}
-
+	}
+	else if (AcceptMinions && (OtherActor->IsA(AFiende::StaticClass()) || OtherActor->IsA(AAvstandFiende::StaticClass())))
+	{
+		if (PlayerActivate == false)
+			PlayerActivate = true;
 	}
 }
 

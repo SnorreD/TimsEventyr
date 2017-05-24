@@ -48,6 +48,7 @@ void AChangeCameraAngle::OnOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 	}
 }
 
+	//Samme som OnOverlap hvis kamerat skal forandres mens du er inni boksen.
 void AChangeCameraAngle::EndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	if (WhileIn == true)

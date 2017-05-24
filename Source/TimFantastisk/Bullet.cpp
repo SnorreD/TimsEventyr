@@ -7,6 +7,7 @@
 #include "AvstandFiende.h"
 #include "Boss1.h"
 #include "Hjernetrim2Fiende.h"
+#include "LastBoss.h"
 
 
 ABullet::ABullet()
@@ -48,7 +49,7 @@ void ABullet::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherA
 	UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex,
 	bool bFromSweep, const FHitResult &SweepResult)
 {
-	//Kulen tar skade på det den traffer.
+	//Kulen tar skade på det den treffer.
 
 	if (OtherActor->IsA(AFiende::StaticClass()) && EnemyBullet == false)
 	{
@@ -75,6 +76,11 @@ void ABullet::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherA
 	else if (OtherActor->IsA(AHjernetrim2Fiende::StaticClass()) && EnemyBullet == false)
 	{
 		Cast<AHjernetrim2Fiende>(OtherActor)->ImHit(Damage);
+		Destroy();
+	}
+	else if (OtherActor->IsA(ALastBoss::StaticClass()) && EnemyBullet == false)
+	{
+		Cast<ALastBoss>(OtherActor)->ImHit(Damage);
 		Destroy();
 	}
 	else if (OtherComponent->ComponentHasTag("Block"))

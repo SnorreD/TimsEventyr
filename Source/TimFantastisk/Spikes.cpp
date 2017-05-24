@@ -25,6 +25,7 @@ void ASpikes::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	//Piggene kan flytte seg opp og ned.
 	if (Move)
 	{
 		if (TimeSinceModeChange > MovementTime)
@@ -39,9 +40,9 @@ void ASpikes::Tick(float DeltaTime)
 
 		TimeSinceModeChange += DeltaTime;
 		if (MovementMode == 1)
-			SetActorLocation(FVector(GetActorLocation().X, GetActorLocation().Y, GetActorLocation().Z - (DeltaTime * 15)));
+			SetActorLocation(FVector(GetActorLocation().X, GetActorLocation().Y, GetActorLocation().Z - (DeltaTime * 30)));
 		else if (MovementMode == 3)
-			SetActorLocation(FVector(GetActorLocation().X, GetActorLocation().Y, GetActorLocation().Z + (DeltaTime * 15)));
+			SetActorLocation(FVector(GetActorLocation().X, GetActorLocation().Y, GetActorLocation().Z + (DeltaTime * 30)));
 	}
 
 }

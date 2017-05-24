@@ -29,7 +29,7 @@ public:
 		bool Move = false;
 
 	int MovementMode{ 1 };
-	float MovementTime{ 2.f };
+	float MovementTime{ 1.f };
 	float TimeSinceModeChange{ 0.f };
 
 	UFUNCTION()

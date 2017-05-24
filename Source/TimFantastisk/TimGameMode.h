@@ -23,6 +23,7 @@ public:
 		FString Tips = "";
 
 	//Hvor langt fiendene skal ned før de dør.
-	float KillZ = -900.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		float KillZ = -900.f;
 	
 };

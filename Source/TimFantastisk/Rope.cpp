@@ -5,7 +5,7 @@
 #include "Tim.h"
 
 
-// Sets default values
+// Tauet fungerer som en heis.
 ARope::ARope()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -40,6 +40,7 @@ void ARope::Tick(float DeltaTime)
 	}
 }
 
+//Setter haisboksen under spilleren nå spilleren rører tauet.
 void ARope::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor,
 	UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex,
 	bool bFromSweep, const FHitResult &SweepResult)

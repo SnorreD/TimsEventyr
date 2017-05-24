@@ -31,6 +31,7 @@ public:
 
 	bool Attack{ false };
 
+	//Det er 4 fiender, med hver sitt angrep (2 av dem deler).
 	UPROPERTY(EditAnywhere, Category = "Attack")
 		int AttackMode;
 
@@ -40,8 +41,6 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Attack")
 		TSubclassOf<class ABullet> BulletBlueprint;
-	UPROPERTY(EditAnywhere, Category = "Attack")
-		TSubclassOf<class AFiende> FiendeBlueprint;
 
 	UPROPERTY(EditAnywhere)
 		UShapeComponent* RootCapsule = nullptr;
@@ -61,6 +60,7 @@ public:
 	void StartAttacking(float DeltaTime);
 	void SetAttackMode(int Mode);
 
+	//Fiende tag holder styr på at fienden ikke har fått en kommando fra FiendeMovementBox og gjør den dobelt om ved å ha en liten kommandoløs periode etter kommando.
 	bool FiendeTag = false;
 	
 };

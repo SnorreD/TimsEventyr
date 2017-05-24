@@ -39,6 +39,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Leveling")
 		int Level;
 
+	//Informasjon om kreftene.
 	UPROPERTY(EditAnywhere, Category = "Leveling")
 		FString Info = "";
 	

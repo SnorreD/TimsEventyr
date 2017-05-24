@@ -170,8 +170,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		bool Finished = false;
 
+	//Working blir brukt til å holde styr på hva den arbeider med.
+	//(-1) er fri, 0-3 er konteinere, 5 er ferdig og stopp, 6 er 'Cutscene' og 7 er flytte platform som lar deg komme til hoved-stedet.
 	int Working{ -1 };
 
+	//Siden visual studio ikke takler æøå i kompilering, la jeg det så jeg kunne skrive i editoren på tekstbokser. (Kunne egentlig ha spillet på engelsk, men gjort er gjort).
 	UPROPERTY(EditAnywhere, Category = "Krystall")
 		FString Blue;
 	UPROPERTY(EditAnywhere, Category = "Krystall")

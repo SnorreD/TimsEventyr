@@ -12,7 +12,6 @@ ABoss1::ABoss1()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	PrimaryActorTick.bCanEverTick = true;
 	RootCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("MyEnemy"));
 	RootComponent = RootCapsule;
 	RootCapsule->SetSimulatePhysics(true);

@@ -134,6 +134,7 @@ void AHjernetrim2::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	//Skriver ut en melding.
 	if (Message)
 	{
 		Timer += DeltaTime;
@@ -146,6 +147,7 @@ void AHjernetrim2::Tick(float DeltaTime)
 			Message = false;
 		}
 	}
+	//Flytter konteineren du er ferdig med ned.
 	if (ContainerOn && (Working == -1 || Working == ContainerNum))
 	{
 		Timer += DeltaTime;
@@ -211,7 +213,7 @@ void AHjernetrim2::Tick(float DeltaTime)
 	{
 		Timer += DeltaTime;
 		if (Timer < Time)
-			Platform->SetWorldLocation(FVector(PlatPos.X, PlatPos.Y, PlatPos.Z + (Timer*110.f)));
+			Platform->SetWorldLocation(FVector(PlatPos.X, PlatPos.Y, PlatPos.Z + (Timer*80.f)));
 		else
 		{
 			Timer = 0.f;
@@ -361,6 +363,8 @@ void AHjernetrim2::OnOverlapKey2(UPrimitiveComponent* OverlappedComponent, AActo
 		Key2->DestroyComponent();
 	}
 }
+
+//En liten 'cutscene' aktig scene blir spilt av.
 void AHjernetrim2::OnOverlapEntrance(UPrimitiveComponent* OverlappedComponent, AActor *OtherActor,
 	UPrimitiveComponent *OtherComponent, int32 OtherBodyIndex,
 	bool bFromSweep, const FHitResult &SweepResult)
@@ -374,18 +378,19 @@ void AHjernetrim2::OnOverlapEntrance(UPrimitiveComponent* OverlappedComponent, A
 		Camera->TargetArmLength = 1400.f;
 		Camera->RelativeRotation = FRotator(-45.f, 90.f, 0.f);
 		Camera->TargetOffset = FVector(0.f, 600.f, 0.f);
+		//Gyter 4 fiender.
 		AActor *Fiende = GetWorld()->SpawnActor<AHjernetrim2Fiende>(FiendeBlueprint, Spawn1->GetComponentLocation(), Spawn1->GetComponentRotation());
 		if (Fiende)
 			Cast<AHjernetrim2Fiende>(Fiende)->SetAttackMode(2);
 		Fiende = GetWorld()->SpawnActor<AHjernetrim2Fiende>(FiendeBlueprint, Spawn2->GetComponentLocation(), Spawn2->GetComponentRotation());
 		if (Fiende)
-			Cast<AHjernetrim2Fiende>(Fiende)->SetAttackMode(1);
+			Cast<AHjernetrim2Fiende>(Fiende)->SetAttackMode(3);
 		Fiende = GetWorld()->SpawnActor<AHjernetrim2Fiende>(FiendeBlueprint, Spawn3->GetComponentLocation(), Spawn3->GetComponentRotation());
 		if (Fiende)
-			Cast<AHjernetrim2Fiende>(Fiende)->SetAttackMode(3);
+			Cast<AHjernetrim2Fiende>(Fiende)->SetAttackMode(1);
 		Fiende = GetWorld()->SpawnActor<AHjernetrim2Fiende>(FiendeBlueprint, Spawn4->GetComponentLocation(), Spawn4->GetComponentRotation());
 		if (Fiende)
-			Cast<AHjernetrim2Fiende>(Fiende)->SetAttackMode(4);
+			Cast<AHjernetrim2Fiende>(Fiende)->SetAttackMode(2);
 		Working = 6;
 		Entrance->DestroyComponent();
 	}
@@ -410,6 +415,7 @@ void AHjernetrim2::OnOverlapDoor(UPrimitiveComponent* OverlappedComponent, AActo
 }
 
 
+//Hva som skjer når man overlapper en konteiner.
 void AHjernetrim2::OverlapContainer(int tall)
 {
 	if (Crystals[tall] && !Container[tall] && Working == -1)

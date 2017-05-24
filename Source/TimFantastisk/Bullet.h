@@ -33,8 +33,11 @@ public:
 
 	float TimeLived{ 0.f };
 
+	//Sterke kuler vil ødelegge skjold med engang.
+	bool StrongBullet{ false };
+
 	//Vi holder øye med om det er en fiende eller spilleren som har skutt kulen. Med denne variablen kommer vi unna vennlig skade.
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		bool EnemyBullet = true;
 
 	UPROPERTY(EditAnywhere)

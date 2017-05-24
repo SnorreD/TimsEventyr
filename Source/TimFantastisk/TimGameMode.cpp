@@ -9,7 +9,7 @@
 ATimGameMode::ATimGameMode()
 {
 	//Lager spilleren når spillet starter.
-	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/Blueprints/TimBlueprint"));
+	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/Blueprints/Karakterer/TimBlueprint"));
 	if (PlayerPawnBPClass.Class != NULL)
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;
